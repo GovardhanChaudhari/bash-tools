@@ -1,9 +1,10 @@
+#!/bin/bash
 alias gcp='gc $1 && gp'
 
 alias is='source ./bash_aliases.txt'
 
 alias gs='git status'
-alias gc='git commit -m $1'
+#alias gc='git commit -m $1'
 alias ga='git add $*'
 alias gp='git push'
 alias grm='git rm $*'
@@ -11,9 +12,20 @@ alias grm='git rm $*'
 alias x='chmod +x $1'
 alias c='touch $1'
 
-cx(){
-    c "$1" && x "$1"
+gc(){
+  git commit -m $1
+  #echo ""
 }
+
+cx(){
+  c "$1" && x "$1"
+}
+
+
+#gcp(){
+#  gc && gp
+#}
+
 
 alias wf='watch -n 0.4 "$*"'
 
