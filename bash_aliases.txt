@@ -1,5 +1,7 @@
 alias gc='git commit -m $1'
+alias grm='git rm $*'
 alias gp='git push'
+alias gcp='gc $1 && gp'
 
 alias wf='watch -n 0.4 "$*"'
 alias gs='git status'
