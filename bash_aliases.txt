@@ -1,4 +1,4 @@
-#alias gm='git commit -m "$1"'
+alias gc='git commit -m $1'
 alias gp='git push'
 
 alias wf='watch -n 0.4 "$*"'
