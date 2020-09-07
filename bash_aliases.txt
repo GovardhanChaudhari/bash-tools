@@ -1,2 +1,7 @@
+#alias gm='git commit -m "$1"'
+alias gp='git push'
+
 alias wf='watch -n 0.4 "$*"'
-alias gm='git commit -m "$1"'
+alias gs='git status'
+alias ga='git add $*'
+alias is='source ./bash_aliases.txt'
