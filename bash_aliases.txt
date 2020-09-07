@@ -1,0 +1,2 @@
+alias wf='watch -n 0.4 "$*"'
+alias gm='git commit -m "$1"'
