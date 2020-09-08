@@ -15,3 +15,7 @@ getCurrentFullFilePath(){
     local fullPath="$dir/$fileName"
     echo $fullPath
 }
+
+md(){
+  mkdir $@
+}
