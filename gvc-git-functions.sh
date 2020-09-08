@@ -9,3 +9,7 @@ cx(){
 gcp(){
     gc $* && gp
 }
+
+gco(){
+  git checkout "$1"
+}
