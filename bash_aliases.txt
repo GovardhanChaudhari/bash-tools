@@ -1,10 +1,6 @@
 #!/bin/bash
-#alias gcp='gc $1 && gp'
-
-alias is='source ./bash_aliases.txt'
 
 alias gs='git status'
-#alias gc='git commit -m $1'
 alias ga='git add $*'
 alias gp='git push'
 alias grm='git rm $*'
