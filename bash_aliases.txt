@@ -1,5 +1,5 @@
 #!/bin/bash
-alias gcp='gc $1 && gp'
+#alias gcp='gc $1 && gp'
 
 alias is='source ./bash_aliases.txt'
 
