@@ -23,3 +23,20 @@ md(){
 rd(){
   rm -fr "$1"
 }
+
+# Create bash file
+gcbf(){
+  echo "#!/bin/bash" > "$1"
+}
+
+# Create new bash file and make it executable
+cx(){
+  gcbf "$1" && x "$1"
+}
+
+# Note: This will give relative path from this file
+#(WIP, not working yet)
+get_relative_path(){
+  echo "$(dirname $(realpath $0))"
+}
+
