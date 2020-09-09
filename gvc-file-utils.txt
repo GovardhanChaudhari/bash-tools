@@ -19,3 +19,7 @@ getCurrentFullFilePath(){
 md(){
   mkdir $@
 }
+
+rd(){
+  rm -fr "$1"
+}
