@@ -1,4 +1,4 @@
-source $parent_dir/env_vars.sh
+source $HOME/bash-tools/env_vars.sh
 
 parent_dir="$HOME/$GVC_BASH_TOOLS"
 
