@@ -2,7 +2,7 @@
 
 # Reload bash-tools aliases and functions
 grt(){
-    source ./index.sh
+    source $GVC_BASH_TOOLS_HOME/index.sh
     echo "gvc-tools reloaded"
 }
 
