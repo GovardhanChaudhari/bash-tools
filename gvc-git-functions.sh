@@ -39,3 +39,13 @@ gmdm(){
   gp
   gcod
 }
+
+#Create git branch 
+gb(){
+  git branch "$1"
+}
+
+# List git branches
+gbl(){
+  git branch
+}
