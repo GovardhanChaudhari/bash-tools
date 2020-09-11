@@ -40,6 +40,15 @@ gmdm(){
   gcod
 }
 
+#Merge current brabch to master
+gmtm(){
+  local currentBranch=`get_current_branch_name`
+  gcom
+  git_merge "$currentBranch"
+  gp
+  gco "$currentBranch"
+}
+
 #Create git branch 
 gb(){
   git branch "$1"
@@ -48,4 +57,9 @@ gb(){
 # List git branches
 gbl(){
   git branch
+}
+
+get_current_branch_name(){
+  local branch_name=$(gbl | awk '{ FS = "\n" } ; {print $2}')
+  echo $branch_name
 }
