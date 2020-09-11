@@ -9,7 +9,7 @@ gkln(){
 }
 
 # List pods
-gkgp(){
+gklp(){
     $kubectl_get_command pods
 }
 
