@@ -60,6 +60,6 @@ gbl(){
 }
 
 get_current_branch_name(){
-  local branch_name=$(gbl | awk '{ FS = "\n" } ; {print $2}')
+  local branch_name=$(gbl | awk '{print $2}')
   echo $branch_name
 }
