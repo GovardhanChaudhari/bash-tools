@@ -29,3 +29,9 @@ gkdb(){
 gkwd(){
     $kubectl_port_forward_command -n weave "$($kubectl_get_command -n weave pod --selector=weave-scope-component=app -o jsonpath='{.items..metadata.name}')" 4040
 }
+
+#Print dashboard token
+gkdbt(){
+    local token=$($kubectl_get_command secret $($kubectl_get_command serviceaccount default -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 --decode )
+    echo $token
+}
