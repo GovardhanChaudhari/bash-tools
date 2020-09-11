@@ -63,3 +63,8 @@ get_current_branch_name(){
   local branch_name=$(gbl | awk '{print $2}')
   echo $branch_name
 }
+
+# Restore file to its original state
+grt(){
+  git restore "$1"
+}
