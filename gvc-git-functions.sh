@@ -65,6 +65,6 @@ get_current_branch_name(){
 }
 
 # Restore file to its original state
-grt(){
+grst(){
   git restore "$1"
 }
