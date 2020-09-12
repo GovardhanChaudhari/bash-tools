@@ -1,6 +1,8 @@
 #!/bin/bash
 kubectl_command="kubectl"
 kubectl_get_command="$kubectl_command get"
+kubectl_apply_command="$kubectl_command apply -f"
+kubectl_delete_command="$kubectl_command delete -f"
 kubectl_config_command="$kubectl_command config"
 kubectl_port_forward_command="$kubectl_command port-forward"
 
@@ -34,4 +36,12 @@ gkwd(){
 gkdbt(){
     local token=$($kubectl_get_command secret $($kubectl_get_command serviceaccount default -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 --decode )
     echo $token
+}
+
+gka(){
+    $kubectl_apply_command "$1"
+}
+
+gkd(){
+    $kubectl_delete_command "$1"
 }
