@@ -2,7 +2,7 @@
 kubectl_command="kubectl"
 kubectl_get_command="$kubectl_command get"
 kubectl_apply_command="$kubectl_command apply -f"
-kubectl_delete_command="$kubectl_command delete -f"
+kubectl_delete_command="$kubectl_command delete --ignore-not-found -f "
 kubectl_config_command="$kubectl_command config"
 kubectl_port_forward_command="$kubectl_command port-forward"
 
