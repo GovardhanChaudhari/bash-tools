@@ -1,8 +1,10 @@
+#!/bin/bash
+
 isCommandExist(){
-    if ! command -v $1 &> /dev/null
+    if ! command -v "$1" &> /dev/null
     then
-        echo "COMMAND could not be found"
+        echo false
     else
-        echo "Command exists"    
+        echo true
     fi
 }
