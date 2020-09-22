@@ -15,8 +15,9 @@ ga(){
 
 # Git add and commit
 gac(){
-  ga .
-  gc "$1"
+  echo "$1"
+  #ga "$1"
+  #gc "$2"
 }
 
 # Git add, commit and push
