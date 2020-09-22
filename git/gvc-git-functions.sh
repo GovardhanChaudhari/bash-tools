@@ -10,7 +10,7 @@ gcp(){
     gc $* && gp
 }
 
-# Git add
+# Add current changes
 git_add(){
    git add "$@"
 }
@@ -23,7 +23,7 @@ gac(){
 
 # Git add, commit and push
 gacp(){
-  gac "$1"
+  gac "$@"
   gp
 }
 
