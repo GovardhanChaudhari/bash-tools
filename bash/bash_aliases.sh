@@ -12,4 +12,5 @@ alias c='touch $1'
 alias cl='cat $1 | less'
 
 alias wf='watch -n 0.4 "$*"'
+alias rs=redshift
 
