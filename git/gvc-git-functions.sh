@@ -8,6 +8,7 @@ gcp(){
 
 gco(){
   git checkout "$1"
+  git remote set-branches --add origin "$1"
 }
 
 # Checkout master branch
@@ -59,6 +60,12 @@ gb(){
   git branch "$1"
 }
 
+# Set branch upstream
+gbsu(){
+  git push --set-upstream origin "$1"
+}
+
+
 # List git branches
 gbl(){
   git branch
@@ -72,4 +79,14 @@ get_current_branch_name(){
 # Restore file to its original state
 grst(){
   git restore "$1"
+}
+
+# Delete remote branch
+gdrb(){
+  git push origin --delete "$1"
+}
+
+# Delete local branch
+gdb(){
+  git branch -d "$1"
 }
