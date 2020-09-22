@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Commit changes
 gc(){
   git commit -m "$1"
@@ -9,13 +11,14 @@ gcp(){
 }
 
 # Git add
-ga(){
-  git add "$@"
+git_add(){
+   git add "$@"
 }
 
 # Git add and commit
 gac(){
-  echo "$1"
+  git_add "$1"
+  gc "$2"
 }
 
 # Git add, commit and push
