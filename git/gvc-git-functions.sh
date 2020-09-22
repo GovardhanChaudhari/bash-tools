@@ -68,7 +68,7 @@ gbsu(){
 
 # List git branches
 gbl(){
-  git branch
+  git branch "$@"
 }
 
 get_current_branch_name(){
