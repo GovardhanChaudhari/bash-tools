@@ -24,6 +24,11 @@ git_merge(){
   git merge "$1"
 }
 
+# Alias for git_merge function
+gm(){
+  git_merge "$@"
+}
+
 # merge given branch to master
 gmm(){
   gcom
