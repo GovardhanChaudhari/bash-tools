@@ -26,7 +26,6 @@ gacp(){
 
 gco(){
   git checkout "$1"
-  git remote set-branches --add origin "$1"
 }
 
 # Checkout master branch
