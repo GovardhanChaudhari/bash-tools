@@ -1,9 +1,28 @@
+# Commit changes
 gc(){
   git commit -m "$1"
 }
 
+# Commit and push
 gcp(){
     gc $* && gp
+}
+
+# Git add
+ga(){
+  git add "$@"
+}
+
+# Git add and commit
+gac(){
+  ga .
+  gc "$1"
+}
+
+# Git add, commit and push
+gacp(){
+  gac "$1"
+  gp
 }
 
 gco(){
