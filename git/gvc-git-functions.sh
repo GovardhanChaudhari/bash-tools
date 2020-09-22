@@ -16,6 +16,7 @@ ga(){
 # Git add and commit
 gac(){
   echo "$1"
+  
   #ga "$1"
   #gc "$2"
 }
