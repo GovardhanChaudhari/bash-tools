@@ -1,5 +1,12 @@
 #!/bin/bash
-kubectl_command="kubectl"
+
+if [[ $(isCommandExist "microk8s") -eq true ]];
+then
+    kubectl_command="microk8s.kubectl" 
+else
+    kubectl_command="kubectl"
+fi
+
 kubectl_get_command="$kubectl_command get"
 kubectl_apply_command="$kubectl_command apply -f"
 kubectl_delete_command="$kubectl_command delete --ignore-not-found -f "
