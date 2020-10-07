@@ -31,7 +31,9 @@ gkscn(){
 
 # Launch dashboard
 gkdb(){
+    gkdbt
     $kubectl_command proxy
+    xdg-open http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=default &
 }
 
 # Launch dashboard
@@ -47,7 +49,8 @@ gkwd(){
 #Print dashboard token
 gkdbt(){
     local token=$($kubectl_get_command secret $($kubectl_get_command serviceaccount default -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 --decode )
-    echo $token
+    echo $token | xsel -b
+    echo "Copied token to clipboard"
 }
 
 gka(){
