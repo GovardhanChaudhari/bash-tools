@@ -34,6 +34,11 @@ gkdb(){
     $kubectl_command proxy
 }
 
+# Launch dashboard
+gkga(){
+    $kubectl_command get all
+}
+
 #Launch weav dashboard
 gkwd(){
     $kubectl_port_forward_command -n weave "$($kubectl_get_command -n weave pod --selector=weave-scope-component=app -o jsonpath='{.items..metadata.name}')" 4040
