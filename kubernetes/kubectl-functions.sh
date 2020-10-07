@@ -32,7 +32,12 @@ gkscn(){
 # Launch dashboard
 gkdb(){
     gkdbt
-    $kubectl_command proxy
+    $kubectl_command proxy &
+    gkodb
+}
+
+#Open dashboard
+gkodb(){
     xdg-open http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=default &
 }
 
