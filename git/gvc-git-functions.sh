@@ -15,6 +15,11 @@ git_add(){
    git add "$@"
 }
 
+# git_add function alias
+gga(){
+   git_add "$@"
+}
+
 # Git add and commit
 gac(){
   git_add "$1"
