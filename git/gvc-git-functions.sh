@@ -110,3 +110,7 @@ gdrb(){
 gdb(){
   git branch -d "$1"
 }
+# Clone
+ggcl(){
+  git clone $1
+}
