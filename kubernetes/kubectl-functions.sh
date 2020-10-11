@@ -8,7 +8,7 @@ else
 fi
 
 kubectl_get_command="$kubectl_command get"
-kubectl_apply_command="$kubectl_command apply -f"
+kubectl_apply_command="$kubectl_command apply"
 kubectl_delete_command="$kubectl_command delete --ignore-not-found -f "
 kubectl_config_command="$kubectl_command config"
 kubectl_port_forward_command="$kubectl_command port-forward"
@@ -59,7 +59,10 @@ gkdbt(){
 }
 
 gka(){
-    $kubectl_apply_command "$1"
+    local path=`getLastArgument $@`
+    local allArgsExceptPath=`getArgsExceptLast $@`
+    echo "$kubectl_apply_command $allArgsExceptPath -f $path"
+    $kubectl_apply_command $allArgsExceptPath -f $path
 }
 
 gkd(){
