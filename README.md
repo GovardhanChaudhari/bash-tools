@@ -20,6 +20,7 @@
 
 #### **Git**
 - **gs** status |
+**gga** add |
 **gp**  push |
 **grm** remove |
 **gc** commit |
