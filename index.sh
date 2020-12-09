@@ -12,3 +12,6 @@ source $parent_dir/git/gvc-git-functions.sh
 
 #Kubernetes Functions
 source $parent_dir/kubernetes/kubectl-functions.sh
+
+source $parent_dir/systemd/systemctl-functions.sh
+
