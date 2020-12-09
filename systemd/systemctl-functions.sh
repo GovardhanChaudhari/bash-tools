@@ -7,7 +7,12 @@ gsl(){
 
 # List services
 gsls(){
-  gsl -t service
+  gsl -t service $@
+}
+
+# List running services
+gslrs(){
+  gsls --state=running $@
 }
 
 # Status
