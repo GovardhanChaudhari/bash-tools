@@ -37,4 +37,4 @@
 **gbd** go to bash tools dir 
 
 #### **Systemctl**
-- **ggs** systemctl status | 
+- **ggs** systemctl status | **gsls** list services only | 
