@@ -35,3 +35,6 @@
 #### **Gvc bash toos**
 - **grt** reload tools |
 **gbd** go to bash tools dir 
+
+#### **Systemctl**
+- **ggs** systemctl status | 
