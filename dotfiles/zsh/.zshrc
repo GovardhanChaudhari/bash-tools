@@ -68,7 +68,7 @@ ZSH_THEME="agnoster"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-completions web-search zsh-syntax-highlighting)
+plugins=(git zsh-autosuggestions zsh-completions web-search zsh-syntax-highlighting tmux)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -118,6 +118,8 @@ zmodload zsh/complist
 compinit
 _comp_options+=(globdots)
 
+# Set LC_ALL locale var so power line fonts should work in tmux
+export LC_ALL="en_IN.utf8"
 # zsh aliases
 alias rzsh='exec zsh'
 
