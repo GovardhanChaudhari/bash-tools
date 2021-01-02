@@ -10,6 +10,7 @@ alias c='touch $1'
 # Slows down the interaction, so not preferred way
 alias cl='cat $1 | less'
 
-alias wf='watch -n 0.4 "$*"'
+alias wrf='watch -n 0.4 "$*"'
+alias t='tail -f "$@"'
 alias rs=redshift
 
