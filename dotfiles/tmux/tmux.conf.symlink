@@ -1,0 +1,24 @@
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+
+# Other examples:
+# set -g @plugin 'github_username/plugin_name'
+# set -g @plugin 'git@github.com:user/plugin'
+# set -g @plugin 'git@bitbucket.com:user/plugin'
+
+# vim-like pane switching
+bind -r k select-pane C-Up 
+bind -r j select-pane C-Down 
+bind -r h select-pane C-Left
+bind -r l select-pane C-Right 
+
+# Resize pane shortcuts
+bind -r K resize-pane C-Up 10
+bind -r J resize-pane C-Down 10
+bind -r H resize-pane C-Left 10
+bind -r L resize-pane C-Right 10
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run '~/.tmux/plugins/tpm/tpm'
