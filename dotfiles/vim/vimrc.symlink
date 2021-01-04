@@ -58,7 +58,7 @@ filetype plugin indent on    " required
 " " Put your non-Plugin stuff after this line
 
 :set number
-:inoremap <C-j> <ESC>
+":inoremap <C-j> <ESC>
 :hi CursorLineNr term=NONE cterm=NONE
 set clipboard=unnamed
 set encoding=utf-8
@@ -85,4 +85,11 @@ syntax on
 
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 nmap <F6> :NERDTreeToggle<CR>
+set shell=/usr/bin/zsh
 
+let g:codi#interpreters = {
+                   \ 'python': {
+                       \ 'bin': 'python3',
+                       \ 'prompt': '^\(>>>\|\.\.\.\) ',
+                       \ },
+                   \ }
