@@ -16,11 +16,11 @@ getCurrentFullFilePath(){
     echo $fullPath
 }
 
-md(){
+gmd(){
   mkdir $@
 }
 
-rd(){
+grd(){
   rm -fr "$1"
 }
 
