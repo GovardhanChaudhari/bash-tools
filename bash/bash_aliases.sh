@@ -13,5 +13,6 @@ alias cl='cat $1 | less'
 alias wrf='watch -n 0.4 "$*"'
 alias t='tail -f "$@"'
 alias rs=redshift
-alias cpzshrc="cp ${HOME}/.zshrc ${GVC_BASH_TOOLS_HOME}/dotfiles/zsh/.zshrc"
+alias cpzshrc="cp ${HOME}/.zshrc ${GVC_BASH_TOOLS_HOME}/dotfiles/zsh/zshrc.symlink"
+alias cpvimrc="cp ${HOME}/.vimrc ${GVC_BASH_TOOLS_HOME}/dotfiles/vim/vimrc.symlink"
 alias editvimrc="vim ${HOME}/.vimrc"
