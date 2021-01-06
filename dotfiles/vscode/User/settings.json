@@ -1,0 +1,22 @@
+{
+    "workbench.colorTheme": "Solarized Light",
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "vs-kubernetes": {
+        "vs-kubernetes.kubectl-path.linux": "/home/gvc/.vs-kubernetes/tools/kubectl/kubectl",
+        "vs-kubernetes.minikube-path.linux": "/home/gvc/.vs-kubernetes/tools/minikube/linux-amd64/minikube"
+    },
+    "python.languageServer": "Microsoft",
+    "editor.columnSelection": false,
+    "editor.minimap.enabled": false,
+    "cSpell.enableFiletypes": [
+        "python"
+    ],
+    "extensions.ignoreRecommendations": true,
+    "telemetry.enableTelemetry": false,
+    "telemetry.enableCrashReporter": false,
+    "breadcrumbs.enabled": false,
+    "editor.renderWhitespace": "all",
+    "workbench.activityBar.visible": false,
+    "editor.renderControlCharacters": true
+}
