@@ -15,5 +15,7 @@ alias t='tail -f "$@"'
 alias rs=redshift
 alias cpzshrc="cp ${HOME}/.zshrc ${GVC_BASH_TOOLS_HOME}/dotfiles/zsh/zshrc.symlink"
 alias cpvimrc="cp ${HOME}/.vimrc ${GVC_BASH_TOOLS_HOME}/dotfiles/vim/vimrc.symlink"
+
+alias cptmuxconf="cp ${HOME}/.tmux.conf ${GVC_BASH_TOOLS_HOME}/dotfiles/tmux/tmux.conf.symlink"
 alias editvimrc="vim ${HOME}/.vimrc"
 alias editzshrc="vim ${HOME}/.zshrc"
