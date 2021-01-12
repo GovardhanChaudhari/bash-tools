@@ -19,3 +19,5 @@ alias cpvimrc="cp ${HOME}/.vimrc ${GVC_BASH_TOOLS_HOME}/dotfiles/vim/vimrc.symli
 alias cptmuxconf="cp ${HOME}/.tmux.conf ${GVC_BASH_TOOLS_HOME}/dotfiles/tmux/tmux.conf.symlink"
 alias editvimrc="vim ${HOME}/.vimrc"
 alias editzshrc="vim ${HOME}/.zshrc"
+
+alias edittmuxconf="vim ${HOME}/.tmux.conf"
