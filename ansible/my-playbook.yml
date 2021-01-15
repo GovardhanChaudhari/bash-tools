@@ -1,0 +1,13 @@
+---
+- hosts : rpi
+  become : true
+  vars :
+    ansible_become_pass : gvc123*@
+  tasks :
+    - name : install nginx
+      package : pkg=nginx state=present
+      notify :
+        - start nginx
+  handlers :
+    - name : start nginx
+      service : name=nginx state=started
