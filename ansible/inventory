@@ -1,2 +1,9 @@
 [rpi]
 192.168.2.2
+
+[docker-hosts]
+172.20.0.2
+jumper ansible_port=2222 ansible_host=172.20.0.2
+
+[local]
+127.0.0.1

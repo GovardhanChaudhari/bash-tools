@@ -1,0 +1,16 @@
+---
+version: "3.9"
+services:
+  my-ansible-service:
+    build: 
+     context: .
+     dockerfile: ./Dockerfile
+    #image: cytopia/ansible:latest-tools 
+    container_name: my-ansible
+    entrypoint: ["/usr/bin/ansible-playbook","my-playbook.yml"]
+    volumes:
+      - .:/data
+networks:
+  default:
+    external:
+      name: alpine-net 

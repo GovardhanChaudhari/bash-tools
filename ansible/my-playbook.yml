@@ -1,5 +1,5 @@
 ---
-- hosts : rpi
+- hosts : local
   become : true
   vars :
     ansible_become_pass : gvc123*@
