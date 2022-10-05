@@ -1,5 +1,8 @@
 ## Bash-tools
 
+Note:
+While checking out dev branch, use -- at the end of git commad to differenciate between path and string as project directory contains dev directory.
+
 #### **KUnernetes**
 - **gkga** Get all |
 **gkln** List namespaces |
