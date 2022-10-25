@@ -1,7 +1,4 @@
 #!/bin/bash
-
-source $HOME/bash-tools/env/env_vars.sh
-
 parent_dir="$GVC_BASH_TOOLS_HOME"
 source $parent_dir/utils/utils.sh
 source $parent_dir/utils/download.sh
