@@ -21,3 +21,4 @@ alias editvimrc="vim ${HOME}/.vimrc"
 alias editzshrc="vim ${HOME}/.zshrc"
 
 alias edittmuxconf="vim ${HOME}/.tmux.conf"
+alias gcsr="clear"
