@@ -1,14 +1,19 @@
+# base command
+gdckrc(){
+docker compose $@
+}
+
 # build
 gdckrcb(){
-	docker compose build $@
+gdckrc build $@
 }
 
 #up
 gdckrcup(){
-docker compose up
+gdckrc up
 }
 
 # down
 gdckrcdwn(){
-docker compose down
+gdckrc down
 }
