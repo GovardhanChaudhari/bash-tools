@@ -44,3 +44,6 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 
 #### **docker**
 - **gdckri** docker images | **gdckrrit** docker run | **gdckrps** docker ps | **gdckrstp** docker stop 
+
+#### **docker compose**
+- **gdckrcb** build | **gdckrcup** up | **gdckrcdwn** down
