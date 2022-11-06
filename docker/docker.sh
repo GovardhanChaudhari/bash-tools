@@ -1,25 +1,25 @@
 #base command
 gdckr(){
-docker $@
+  docker $@
 }
 
 # docker images
 gdckri(){
-	gdckr images
+  gdckr images
 }
 
 # docker run 
 gdckrrit(){
-	gdckr run -it $@
+  gdckr run -it $@
 }
 
 # ps
 gdckrps(){
-	gdckr ps
+  gdckr ps
 }
 
 # stop
 gdckrstp(){
-	gdckr stop $@
+  gdckr stop $@
 }
 
