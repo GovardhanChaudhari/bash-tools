@@ -40,7 +40,7 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 **gbd** go to bash tools dir 
 
 #### **Systemctl**
-- **ggs** systemctl status | **gsls** list services only | **gslrs** list running services |
+- **ggs** systemctl status | **gsls** list services only | **gslrs** list running services | **gsstps** stop service | **gssrts** start service | **gsds** disable service | **gses** enable service
 
 #### **docker**
 - **gdckri** docker images | **gdckrrit** docker run | **gdckrps** docker ps | **gdckrstp** docker stop 

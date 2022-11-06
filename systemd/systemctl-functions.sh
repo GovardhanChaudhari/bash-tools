@@ -1,8 +1,10 @@
-systemctl_command="systemctl"
+gsctl(){
+ systemctl $@
+}
 
 # List
 gsl(){
-  $systemctl_command $@
+  gsctl $@
 }
 
 # List services
@@ -17,5 +19,25 @@ gslrs(){
 
 # Status
 gss(){
-  gsl status $@
+  gsctl status $@
+}
+
+# stop
+gsstps(){
+	gsctl stop $@
+}
+
+# start service
+gssrts(){
+	gsctl start $@
+}
+
+# disable service
+gsds(){
+	gsctl disable $@
+}
+
+# enable service
+gses(){
+	gsctl enable $@
 }
