@@ -35,7 +35,7 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 **gacp** add, commit and push
 
 #### **Gvc bash toos**
-- **grt** reload tools | **gbuer** edit README | **gbusr** show README |
+- **grt** reload tools | **gbuer** edit README | **gbuh** show README |
 **gbd** go to bash tools dir | **gbuei** edit index.sh 
 
 #### **Systemctl**
