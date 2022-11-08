@@ -1,6 +1,4 @@
-gsctl(){
- systemctl $@
-}
+gsctl(){ sudo systemctl $@ }
 
 # List
 gsl(){
