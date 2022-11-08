@@ -17,3 +17,4 @@ source $parent_dir/docker/docker.sh
 
 source $parent_dir/docker/docker-compose.sh
 
+source $parent_dir/apt/apt.sh
