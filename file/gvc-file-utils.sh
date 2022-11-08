@@ -43,4 +43,5 @@ get_relative_path(){
 # edit shortcut
 e(){ vim $@ }
 
-
+# show file
+gfs(){ less $@ }

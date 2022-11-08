@@ -16,7 +16,7 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 **gkd** delete |
 
 #### **Bash commands**
-- **c** create file |
+- **c** create file | **gfs** less file
 **x** make executable |
 **cl** cat and less |
 **wf** watch file
