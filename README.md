@@ -54,4 +54,4 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 - **gezrc** edit zshrc
 
 #### **bash**
-- **gebashrc** edit bashrc
+- **gebrc** edit bashrc
