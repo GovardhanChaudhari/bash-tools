@@ -16,7 +16,7 @@ git_add(){
 }
 
 # git_add function alias
-gga(){
+gad(){
    git_add "$@"
 }
 

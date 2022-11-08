@@ -22,7 +22,7 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 
 #### **Git**
 - **gs** status |
-**gga** add |
+**gad** add |
 **gp**  push |
 **grm** remove |
 **gc** commit |
