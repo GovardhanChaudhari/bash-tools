@@ -50,3 +50,7 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 
 #### **apt**
 - **i** install | **gu** updage | **gup** upgrade | **gfup** full upgrade | **glu** list upgradable | **gar** remove | **gat`r** autoremove
+
+#### **zsh**
+- **gezshrc** edit zshrc
+
