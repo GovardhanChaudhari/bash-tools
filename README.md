@@ -18,7 +18,6 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 #### **Bash commands**
 - **c** create file | **gfs** less file
 **x** make executable |
-**cl** cat and less |
 **wf** watch file
 
 #### **Git**
