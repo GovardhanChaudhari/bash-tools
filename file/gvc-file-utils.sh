@@ -40,3 +40,7 @@ get_relative_path(){
   echo "$(dirname $(realpath $0))"
 }
 
+# edit shortcut
+e(){ vim $@ }
+
+
