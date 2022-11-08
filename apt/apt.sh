@@ -17,5 +17,7 @@ gfup(){ aptcmd fullupgrade $@}
 glu(){ aptcmd list --upgradable }
 
 # autoremove
-gar(){ aptcmd autoremove $@ }
+gatr(){ aptcmd autoremove $@ }
 
+# remove
+gar(){ aptcmd remove }
