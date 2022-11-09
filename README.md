@@ -3,8 +3,11 @@
 Note:
 While checking out dev branch, use -- at the end of git commad to differenciate between path and string as project directory contains dev directory.
 
+---
+
 ## Kubernetes
-- **gkga** Get all | **gkln** List namespaces | **gklp** List pods | **gkdb** Launch dashboard | **gkdb** Launch dashboard | **gkdbt** Copy dashboard token to clipboard | **gkwd** Launch weave dashboard | **gkscn** Set current namespace | **gka** apply | **gkd** delete |
+
+**gkga** Get all | **gkln** List namespaces | **gklp** List pods | **gkdb** Launch dashboard | **gkdbt** Copy dashboard token to clipboard | **gkwd** Launch weave dashboard | **gkscn** Set current namespace | **gka** apply | **gkd** delete |
 
 #### **Bash commands**
 - **c** create file | **gfs** less file | **x** make executable | **wf** watch file
