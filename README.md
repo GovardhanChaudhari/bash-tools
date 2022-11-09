@@ -9,7 +9,7 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 **gs** status | **gad** add | **gp**  push | **grm** remove | **gc** commit | **gm** merge | **gcp** commit and push | **gco** checkout | **gcom** checkout master | **gcod** checkout dev | **gac** add and commit | **gacp** add, commit and push
 
 ## Gvc bash toos
-**grt** reload tools | **gbter** edit README | **gbth** show README |
+**gbtr** reload tools | **gbter** edit README | **gbth** show README |
 **gbtd** go to bash tools dir | **gbtei** edit index.sh 
 
 ## Bash commands
