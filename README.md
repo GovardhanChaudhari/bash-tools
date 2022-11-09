@@ -36,4 +36,5 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 ## Kubernetes
 **gkga** Get all | **gkln** List namespaces | **gklp** List pods | **gkdb** Launch dashboard | **gkdbt** Copy dashboard token to clipboard | **gkwd** Launch weave dashboard | **gkscn** Set current namespace | **gka** apply | **gkd** delete |
 
-
+## nmap
+**gnmp** nmap base cmd | 
