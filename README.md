@@ -2,12 +2,15 @@
 Note:
 While checking out dev branch, use -- at the end of git commad to differenciate between path and string as project directory contains dev directory.
 
+## Help
+**gh** show help of given command | **ghl** show help in less
+
 ## Git
 **gs** status | **gad** add | **gp**  push | **grm** remove | **gc** commit | **gm** merge | **gcp** commit and push | **gco** checkout | **gcom** checkout master | **gcod** checkout dev | **gac** add and commit | **gacp** add, commit and push
 
 ## Gvc bash toos
-**grt** reload tools | **gbuer** edit README | **gbuh** show README |
-**gbd** go to bash tools dir | **gbuei** edit index.sh 
+**grt** reload tools | **gbter** edit README | **gbth** show README |
+**gbtd** go to bash tools dir | **gbtei** edit index.sh 
 
 ## Bash commands
 **c** create file | **gfs** less file | **x** make executable | **wf** watch file
