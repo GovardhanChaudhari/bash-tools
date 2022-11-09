@@ -13,7 +13,7 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 **gbtd** go to bash tools dir | **gbtei** edit index.sh 
 
 ## Bash commands
-**c** create file | **gfs** less file | **x** make executable | **wf** watch file
+**c** create file | **gfs** less file | **x** make executable | **wf** watch file | **gfndc** find content in files
 
 ## apt
 **gi** install | **gu** updage | **gup** upgrade | **gfup** full upgrade | **glu** list upgradable | **gar** remove | **gatr** autoremove

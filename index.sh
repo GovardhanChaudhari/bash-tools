@@ -7,6 +7,7 @@ source $parent_dir/bash/bash-functions.sh
 source $parent_dir/file/gvc-file-utils.sh
 source $parent_dir/command/gvc-command-utils.sh
 source $parent_dir/command/help.sh
+source $parent_dir/command/find.sh
 source $parent_dir/git/gvc-git-functions.sh
 
 source $parent_dir/dev/bash-tools-utils.sh
