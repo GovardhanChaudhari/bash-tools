@@ -48,7 +48,7 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 - **gdckrcb** build | **gdckrcup** up | **gdckrcdwn** down
 
 #### **apt**
-- **i** install | **gu** updage | **gup** upgrade | **gfup** full upgrade | **glu** list upgradable | **gar** remove | **gatr** autoremove
+- **gi** install | **gu** updage | **gup** upgrade | **gfup** full upgrade | **glu** list upgradable | **gar** remove | **gatr** autoremove
 
 #### **zsh**
 - **gezrc** edit zshrc
