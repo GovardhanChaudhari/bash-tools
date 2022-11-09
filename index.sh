@@ -12,15 +12,14 @@ source $parent_dir/git/gvc-git-functions.sh
 
 source $parent_dir/dev/bash-tools-utils.sh
 
-
 source $parent_dir/zsh/zsh-functions.sh
 #Kubernetes Functions
 source $parent_dir/kubernetes/kubectl-functions.sh
 
 source $parent_dir/systemd/systemctl-functions.sh
+source $parent_dir/sys-utils/sys.sh
 
 source $parent_dir/docker/docker.sh
-
 
 source $parent_dir/docker/docker-compose.sh
 

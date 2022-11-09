@@ -21,6 +21,9 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 ## Systemctl
 **ggs** status | **gsls** list services only | **gslrs** list running services | **gsstps** stop service | **gssrts** start service | **gsds** disable service | **gses** enable service
 
+## system
+**gpoff** poweroff | **grbt** reboot
+
 ## docker
 **gdckri** list images | **gdckrrit** run | **gdckrps** ps | **gdckrstp** stop 
 
