@@ -9,33 +9,33 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 
 **gkga** Get all | **gkln** List namespaces | **gklp** List pods | **gkdb** Launch dashboard | **gkdbt** Copy dashboard token to clipboard | **gkwd** Launch weave dashboard | **gkscn** Set current namespace | **gka** apply | **gkd** delete |
 
-## **Bash commands**
+## Bash commands
 **c** create file | **gfs** less file | **x** make executable | **wf** watch file
 
-## **Git**
+## Git
 **gs** status | **gad** add | **gp**  push | **grm** remove | **gc** commit | **gm** merge | **gcp** commit and push | **gco** checkout | **gcom** checkout master | **gcod** checkout dev | **gac** add and commit | **gacp** add, commit and push
 
-## **Gvc bash toos**
+## Gvc bash toos
 **grt** reload tools | **gbuer** edit README | **gbuh** show README |
 **gbd** go to bash tools dir | **gbuei** edit index.sh 
 
-## **Systemctl**
+## Systemctl
 **ggs** systemctl status | **gsls** list services only | **gslrs** list running services | **gsstps** stop service | **gssrts** start service | **gsds** disable service | **gses** enable service
 
-## **docker**
+## docker
 **gdckri** docker images | **gdckrrit** docker run | **gdckrps** docker ps | **gdckrstp** docker stop 
 
-## **docker compose**
+## docker compose
 **gdckrcb** build | **gdckrcup** up | **gdckrcdwn** down
 
-## **apt**
+## apt
 **gi** install | **gu** updage | **gup** upgrade | **gfup** full upgrade | **glu** list upgradable | **gar** remove | **gatr** autoremove
 
-## **zsh**
+## zsh
 **gezrc** edit zshrc
 
-## **bash**
+## bash
 **gebrc** edit bashrc
 
-## **vim**
+## vim
 **gevrc** edit vimrc | 
