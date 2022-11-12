@@ -16,7 +16,7 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 **c** create file | **gfs** less file | **x** make executable | **wf** watch file | **gfndc** find content in files
 
 ## apt
-**gi** install | **gu** updage | **gup** upgrade | **gfup** full upgrade | **glu** list upgradable | **gar** remove | **gatr** autoremove
+**gi** install | **gu** updage | **gup** upgrade | **gfup** full upgrade | **gli** list instlled | **glu** list upgradable | **gar** remove | **gatr** autoremove
 
 ## Systemctl
 **ggs** status | **gsls** list services only | **gslrs** list running services | **gsstps** stop service | **gssrts** start service | **gsds** disable service | **gses** enable service

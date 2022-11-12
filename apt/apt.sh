@@ -16,8 +16,14 @@ gfup(){ aptcmd fullupgrade $@}
 # list upgradable
 glu(){ aptcmd list --upgradable }
 
+# list installed
+gli(){ aptcmd list --installed }
+
 # autoremove
 gatr(){ aptcmd autoremove $@ }
 
 # remove
 gar(){ aptcmd remove }
+
+# show 
+gas(){ aptcmd show $@ }
