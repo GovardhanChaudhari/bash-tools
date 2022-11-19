@@ -28,3 +28,6 @@ source $parent_dir/apt/apt.sh
 source $parent_dir/vim/vim-functions.sh
 
 source $parent_dir/nmap/nmap.sh
+
+
+source $parent_dir/tmux/tmux.sh

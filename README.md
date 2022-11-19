@@ -38,3 +38,6 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 
 ## nmap
 **gnmp** nmap base cmd | 
+
+## tmux
+**gtma** attach | 
