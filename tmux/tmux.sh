@@ -2,4 +2,4 @@
 gtmx(){ tmux $@ }
 
 # attach to session
-gtma(){ gtmx a $@ }
+gtma(){ gtmx a -t $@ }
