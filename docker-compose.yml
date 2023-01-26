@@ -3,3 +3,7 @@ services:
   test-bash-tools:
     build:
       context: .
+    volumes:
+      - type: bind
+        source: .
+        target: /home/bash-tools
