@@ -1,6 +1,6 @@
 # Bash-tools
 Note:
-While checking out dev branch, use -- at the end of git commad to differenciate between path and string as project directory contains dev directory.
+While checking out dev branch, use -- at the end of git command to differentiate between path and string as project directory contains dev directory.
 
 ## Help
 **gh** show help of given command | **ghl** show help in less
@@ -16,13 +16,13 @@ While checking out dev branch, use -- at the end of git commad to differenciate 
 **c** create file | **gfs** less file | **x** make executable | **wf** watch file | **gfndc** find content in files
 
 ## apt
-**gi** install | **gu** updage | **gup** upgrade | **gfup** full upgrade | **gli** list instlled | **glu** list upgradable | **gar** remove | **gatr** autoremove
+**gi** install | **gu** update | **gup** upgrade | **gfup** full upgrade | **gli** list installed | **glu** list upgradable | **gar** remove | **gatr** auto remove
 
 ## Systemctl
 **ggs** status | **gsls** list services only | **gslrs** list running services | **gsstps** stop service | **gssrts** start service | **gsds** disable service | **gses** enable service
 
 ## system
-**gpoff** poweroff | **grbt** reboot
+**gpoff** power off | **grbt** reboot
 
 ## docker
 **gdckri** list images | **gdckrrit** run | **gdckrps** ps | **gdckrstp** stop 

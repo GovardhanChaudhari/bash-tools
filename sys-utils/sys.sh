@@ -1,4 +1,4 @@
-# poweroff
+# power off
 gpoff(){ sudo poweroff $@ }
 
 # reboot

@@ -11,7 +11,7 @@ gu(){ aptcmd update $@ }
 gup(){ aptcmd upgrade $@ }
 
 # full upgrade
-gfup(){ aptcmd fullupgrade $@}
+gfup(){ aptcmd fullupgrade $@ }
 
 # list upgradable
 glu(){ aptcmd list --upgradable }
