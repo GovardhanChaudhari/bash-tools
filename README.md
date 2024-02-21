@@ -41,3 +41,6 @@ While checking out dev branch, use -- at the end of git command to differentiate
 
 ## tmux
 **gtma** attach | 
+
+## rpi4
+**rpimt** show rpi temperature
