@@ -31,3 +31,5 @@ source $parent_dir/nmap/nmap.sh
 
 
 source $parent_dir/tmux/tmux.sh
+
+source $parent_dir/rpi4/rpi4-func.sh
