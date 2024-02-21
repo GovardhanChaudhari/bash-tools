@@ -7,6 +7,6 @@ gbtr(){
 }
 
 # Go to bash-tools dir
-gbd(){
+gbtd(){
     cd $GVC_BASH_TOOLS_HOME
 }
