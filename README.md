@@ -42,5 +42,7 @@ While checking out dev branch, use -- at the end of git command to differentiate
 ## tmux
 **gtma** attach | 
 
+Tmux resurrect plugin's imp env file is backedup in ./tmux/plugins/resurrect dir. Copy this file to ~/.tmux/resurrect dir create a symlink called 'last' to the same dir.
+
 ## rpi4
 **rpimt** show rpi temperature
