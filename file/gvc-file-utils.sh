@@ -44,4 +44,4 @@ get_relative_path(){
 e(){ vim $@ }
 
 # show file
-gfs(){ less $@ }
+glf(){ less $@ }
