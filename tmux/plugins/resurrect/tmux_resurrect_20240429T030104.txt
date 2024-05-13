@@ -1,0 +1,67 @@
+pane	dev-bt	0	0	:-	0	raspberrypi	:/home/gvc/dev/bash-tools/bash	1	less	:less /home/gvc/dev/bash-tools/README.md
+pane	dev-bt	1	1	:*	0	raspberrypi	:/home/gvc/dev/bash-tools	1	zsh	:
+pane	dev-bt	2	0	:	0	raspberrypi	:/home/gvc/dev/bash-tools/bash	1	zsh	:
+pane	dev-bt	2	0	:	1	raspberrypi	:/home/gvc/dev/bash-tools	0	vim	:vim bash/bash-functions.sh
+pane	dev-bt	3	0	:	0	raspberrypi	:/home/gvc/dev/bash-tools	1	vim	:vim file/gvc-file-utils.sh
+pane	dev-bt	4	0	:	0	raspberrypi	:/home/gvc/dev/bash-tools	1	zsh	:
+pane	ollam	0	0	:	0	raspberrypi	:/home/gvc	1	zsh	:
+pane	ollam	1	0	:-	0	raspberrypi	:/home/gvc	1	zsh	:
+pane	ollam	2	1	:*	0	raspberrypi	:/home/gvc	1	mc	:mc
+pane	pc	0	1	:*	0	raspberrypi	:/home/gvc	1	zsh	:
+pane	pc	0	1	:*	1	raspberrypi	:/home/gvc	0	zsh	:
+pane	pc	0	1	:*	2	raspberrypi	:/home/gvc	0	zsh	:
+pane	pc	0	1	:*	3	raspberrypi	:/home/gvc	0	zsh	:
+pane	pc	0	1	:*	4	raspberrypi	:/home/gvc/dev/docker-experiments	0	zsh	:
+pane	tab-dev	0	1	:*	0	raspberrypi	:/home/gvc	1	htop	:htop
+pane	tab-dev	1	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	vim	:vim docker-compose.yml
+pane	tab-dev	2	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	zsh	:
+pane	tab-dev	3	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	zsh	:
+pane	tab-dev	4	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	zsh	:
+pane	tab-dev	5	0	:-	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	vim	:vim nginx.conf
+pane	tab-dev	6	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	zsh	:
+pane	tab-dev	7	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	zsh	:
+pane	tab-dev	8	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	vim	:vim set-proxy.sh
+pane	tab-dev	9	0	:Z	0	raspberrypi	:/home/gvc	0	zsh	:
+pane	tab-dev	9	0	:Z	1	raspberrypi	:/home/gvc	0	zsh	:
+pane	tab-dev	9	0	:Z	2	raspberrypi	:/home/gvc	0	zsh	:
+pane	tab-dev	9	0	:Z	3	raspberrypi	:/home/gvc/dev/docker-experiments	1	zsh	:
+pane	tab-dev	10	0	:	0	raspberrypi	:/home/gvc	0	man	:man free
+pane	tab-dev	10	0	:	1	raspberrypi	:/home/gvc/dev/docker-experiments	1	zsh	:
+pane	tab-dev1-tmux-config	0	0	:-	0	raspberrypi	:/home/gvc	1	vim	:vim /home/gvc/.tmux.conf
+pane	tab-dev1-tmux-config	1	1	:*	0	raspberrypi	:/home/gvc/.tmux/plugins/tmux-df	1	zsh	:bash
+pane	win-tshark	0	0	:	0	raspberrypi	:/home/gvc	1	zsh	:
+pane	win-tshark	1	0	:	0	raspberrypi	:/home/gvc	1	man	:man cut
+pane	win-tshark	2	0	:	0	raspberrypi	:/home/gvc	1	zsh	:
+pane	win-tshark	3	0	:-	0	raspberrypi	:/home/gvc	0	zsh	:
+pane	win-tshark	3	0	:-	1	raspberrypi	:/home/gvc	1	man	:man tshark
+pane	win-tshark	4	1	:*	0	raspberrypi	:/home/gvc	1	zsh	:
+pane	win-tshark	4	1	:*	1	raspberrypi	:/home/gvc	0	zsh	:
+pane	win-tshark	4	1	:*	2	raspberrypi	:/home/gvc	0	man	:man nmap
+window	dev-bt	0	:bth	0	:-	d45e,236x59,0,0,1	off
+window	dev-bt	1	:edit	1	:*	d45f,236x59,0,0,2	off
+window	dev-bt	2	:btr	0	:	add4,236x59,0,0[236x30,0,0,3,236x28,0,31,4]	off
+window	dev-bt	3	:edit index	0	:	d462,236x59,0,0,5	off
+window	dev-bt	4	:zsh	0	:	d463,236x59,0,0,6	:
+window	ollam	0	:zsh	0	:	6a67,236x59,0,0,37	:
+window	ollam	1	:run	0	:-	6a68,236x59,0,0,38	off
+window	ollam	2	:mc	1	:*	6a69,236x59,0,0,39	off
+window	pc	0	:zsh	1	:*	064f,236x59,0,0[236x30,0,0{117x30,0,0,7,118x30,118,0,8},236x14,0,31{117x14,0,31,9,118x14,118,31,10},236x13,0,46,11]	:
+window	tab-dev	0	:htop	1	:*	6a61,236x59,0,0,12	off
+window	tab-dev	1	:edit-dc-yml	0	:	6a62,236x59,0,0,13	off
+window	tab-dev	2	:dckr-comp	0	:	6a63,236x59,0,0,14	off
+window	tab-dev	3	:cmd dc-exe	0	:	6a64,236x59,0,0,15	off
+window	tab-dev	4	:curl	0	:	6a65,236x59,0,0,16	off
+window	tab-dev	5	:edit-conf	0	:-	6a66,236x59,0,0,17	off
+window	tab-dev	6	:git	0	:	6a67,236x59,0,0,18	off
+window	tab-dev	7	:set-prixy	0	:	6a68,236x59,0,0,19	off
+window	tab-dev	8	:edit-prox	0	:	ea5f,236x59,0,0,20	off
+window	tab-dev	9	:ollama	0	:Z	c778,236x59,0,0[236x23,0,0,21,236x10,0,24,22,236x10,0,35,23,236x13,0,46,24]	off
+window	tab-dev	10	:man	0	:	3ce2,236x59,0,0[236x30,0,0,25,236x28,0,31,26]	off
+window	tab-dev1-tmux-config	0	:edit conf	0	:-	e816,116x58,0,0,27	off
+window	tab-dev1-tmux-config	1	:zsh	1	:*	e817,116x58,0,0,28	:
+window	win-tshark	0	:zsh	0	:	ea68,236x59,0,0,29	:
+window	win-tshark	1	:man	0	:	6a60,236x59,0,0,30	off
+window	win-tshark	2	:exp	0	:	6a61,236x59,0,0,31	off
+window	win-tshark	3	:tshark	0	:-	a50c,236x59,0,0{118x59,0,0,32,117x59,119,0,33}	off
+window	win-tshark	4	:nmap	1	:*	24bd,236x59,0,0{118x59,0,0[118x29,0,0,34,118x29,0,30,36],117x59,119,0,35}	off
+state	tab-dev1-tmux-config	ollam
