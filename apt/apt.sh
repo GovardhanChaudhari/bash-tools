@@ -8,7 +8,7 @@ gi(){ aptcmd install $@ }
 gu(){ aptcmd update $@ }
 
 # upgrade 
-gup(){ aptcmd upgrade $@ }
+ggup(){ aptcmd upgrade $@ }
 
 # full upgrade
 gfup(){ aptcmd fullupgrade $@ }

@@ -16,7 +16,7 @@ gslrs(){
 }
 
 # Status
-gss(){
+ggss(){
   gsctl status $@
 }
 
