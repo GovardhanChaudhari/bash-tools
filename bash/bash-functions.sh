@@ -7,4 +7,4 @@ gcls(){ clear }
 
 gcdp(){ cd .. }
 
-
+glc(){ $@ | less }
