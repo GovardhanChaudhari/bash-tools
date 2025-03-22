@@ -6,7 +6,7 @@ While checking out dev branch, use -- at the end of git command to differentiate
 **gh** show help of given command | **ghl** show help in less
 
 ## Git
-**gs** status | **gad** add | **gp** push | **grm** remove | **gc** commit | **gm** merge | **gcp** commit and push | **gco** checkout | **gcom** checkout master | **gcod** checkout dev | **gac** add and commit | **gacp** add, commit and push | **ggb** create branch | **ggbl** list branches | **gdrb** delete remote branch | **gdb** delete local branch | **gbsu** set branch upstream | **ggrst** restore file | **ggcl** clone
+**gs** status | **gad** add | **gp** push | **grm** remove | **gc** commit | **gm** merge | **gcp** commit and push | **gco** checkout | **gcom** checkout master | **gcod** checkout dev | **gac** add and commit | **gacp** add, commit and push | **ggb** create branch | **ggbl** list branches | **gdrb** delete remote branch | **gdb** delete local branch | **gbsu** set branch upstream | **ggrst** restore file | **ggcl** clone | **gsshadd** Avoid asking for passphrase every time during git operations 
 
 ## Gvc bash tools
 **gbtr** reload tools | **gbter** edit README | **gbth** show README |

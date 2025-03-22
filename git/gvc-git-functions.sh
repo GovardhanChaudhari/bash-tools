@@ -119,3 +119,9 @@ gdb(){
 ggcl(){
   git clone $1
 }
+
+# Avoid asking for passphrase every time during git operations
+gsshadd(){
+  eval "$(ssh-agent -s)"
+  ssh-add ~/.ssh/id_ed25519 2>/dev/null
+}
