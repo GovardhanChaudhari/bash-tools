@@ -1,5 +1,7 @@
-# power off
+# Power off the system
+# Usage: gpoff
 gpoff(){ sudo poweroff $@ }
 
-# reboot
-grbt(){ sudo reboot $@ $@ }
+# Reboot the system
+# Usage: grbt
+grbt(){ sudo reboot $@ }
