@@ -1,24 +1,29 @@
-#base command
+# Base docker command
+# Usage: gdckr [docker-options] [command] [args]
 gdckr(){
   docker $@
 }
 
-# docker images
+# List docker images
+# Usage: gdckri
 gdckri(){
   gdckr images
 }
 
-# docker run 
+# Run interactive docker container
+# Usage: gdckrrit image_name [command]
 gdckrrit(){
   gdckr run -it $@
 }
 
-# ps
+# List running containers
+# Usage: gdckrps [options]
 gdckrps(){
-  gdckr ps
+  gdckr ps $@
 }
 
-# stop
+# Stop running container(s)
+# Usage: gdckrstp container_id [container_ids...]
 gdckrstp(){
   gdckr stop $@
 }

@@ -38,6 +38,11 @@ if ! grep -q "bash-tools" ~/.bashrc; then
   echo "Adding to shell rc file..."
   echo -e "\n# bash-tools" >> ~/.bashrc
   echo "source ~/.bash-tools/index.sh" >> ~/.bashrc
+  
+  # Add completions
+  echo "for completion in ~/.bash-tools/completions/*.bash; do" >> ~/.bashrc
+  echo "  source \"\$completion\"" >> ~/.bashrc
+  echo "done" >> ~/.bashrc
 fi
 
 echo "Installation complete. Version: $VERSION"
