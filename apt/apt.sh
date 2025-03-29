@@ -1,29 +1,39 @@
-# base command
+# Base apt command with sudo
+# Usage: aptcmd [apt-options] [command] [package-names]
 aptcmd(){ sudo apt $@ }
 
-# install
+# Install package(s)
+# Usage: gi package1 [package2...]
 gi(){ aptcmd install $@ }
 
-# update
+# Update package list
+# Usage: gu
 gu(){ aptcmd update $@ }
 
-# upgrade 
+# Upgrade all upgradable packages
+# Usage: ggup
 ggup(){ aptcmd upgrade $@ }
 
-# full upgrade
+# Full upgrade (dist-upgrade)
+# Usage: gfup
 gfup(){ aptcmd fullupgrade $@ }
 
-# list upgradable
+# List upgradable packages
+# Usage: glu
 glu(){ aptcmd list --upgradable }
 
-# list installed
+# List installed packages
+# Usage: gli [pattern]
 gli(){ aptcmd list --installed }
 
-# autoremove
+# Remove unnecessary packages
+# Usage: gatr
 gatr(){ aptcmd autoremove $@ }
 
-# remove
-gar(){ aptcmd remove }
+# Remove package(s)
+# Usage: gar package1 [package2...]
+gar(){ aptcmd remove $@ }
 
-# show 
+# Show package information
+# Usage: gas package-name
 gas(){ aptcmd show $@ }

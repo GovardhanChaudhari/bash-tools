@@ -1,4 +1,28 @@
 # Bash-tools
+
+## Installation
+```bash
+# Clone the repository
+git clone https://github.com/govardhan-chaudhari/bash-tools.git
+cd bash-tools
+
+# Run the installer
+./install.sh
+```
+
+## Testing
+Tests require [bats-core](https://github.com/bats-core/bats-core):
+```bash
+cd tests
+bats apt_tests.bats
+```
+
+## Contributing
+1. Add documentation comments to new functions
+2. Include corresponding test cases
+3. Keep the modular structure
+4. Follow existing naming conventions
+
 Note:
 While checking out dev branch, use -- at the end of git command to differentiate between path and string as project directory contains dev directory.
 
