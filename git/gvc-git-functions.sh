@@ -1,61 +1,75 @@
 #!/bin/bash
 
-# Commit changes
+# Commit changes with message
+# Usage: ggc "commit message"
 ggc() {
   git commit -m "$@"
 }
 
-# Commit and push
+# Commit changes and push to remote
+# Usage: ggcp "commit message"
 ggcp(){
     ggc $* && gp
 }
 
-# Add current changes
+# Stage files for commit
+# Usage: git_add file1 [file2...]
 git_add(){
    git add "$@"
 }
 
-# git_add function alias
+# Alias for git_add
+# Usage: gad file1 [file2...]
 gad(){
    git_add "$@"
 }
 
-# Git add and commit
+# Add changes and commit with message
+# Usage: gac file "commit message"
 gac(){
   git_add "$1"
   gc "$2"
 }
 
-# Git add, commit and push
+# Add changes, commit and push
+# Usage: gacp file "commit message"
 gacp(){
   gac "$@"
   gp
 }
 
+# Checkout branch or commit
+# Usage: ggco branch_name
 ggco(){
   git checkout "$1"
 }
 
 # Checkout master branch
+# Usage: gcom
 gcom(){
   gco master
 }
 
 # Checkout dev branch
+# Usage: gcod
 gcod(){
   gco dev
 }
 
+# Merge branch into current branch
+# Usage: git_merge branch_name
 git_merge(){
   git merge "$1"
 }
 
-# Alias for git_merge function
+# Alias for git_merge
+# Usage: ggm branch_name
 ggm(){
   git_merge "$@"
 }
 
-# merge given branch to master
+# Merge branch to master and push
+# Usage: gmm branch_name
 gmm(){
   gcom
   git_merge "$1"
@@ -63,7 +77,8 @@ gmm(){
   gco "$1"
 }
 
-# Merge dev branch to master branch
+# Merge dev branch to master and push
+# Usage: gmdm
 gmdm(){
   gcom
   git_merge dev
@@ -71,7 +86,8 @@ gmdm(){
   gcod
 }
 
-#Merge current brabch to master
+# Merge current branch to master and push
+# Usage: gmtm
 gmtm(){
   local currentBranch=`get_current_branch_name`
   gcom
@@ -80,47 +96,57 @@ gmtm(){
   gco "$currentBranch"
 }
 
-#Create git branch 
+# Create new git branch
+# Usage: ggb branch_name
 ggb(){
   git branch "$1"
 }
 
-# Set branch upstream
+# Set upstream for branch
+# Usage: gbsu branch_name
 gbsu(){
   git push --set-upstream origin "$1"
 }
 
-
-# List git branches
+# List branches
+# Usage: ggbl [options]
 ggbl(){
   git branch "$@"
 }
 
+# Get current branch name
+# Usage: get_current_branch_name
 get_current_branch_name(){
   local branch_name=$(gbl | awk '{print $2}')
   echo $branch_name
 }
 
-# Restore file to its original state
+# Restore file to last committed state
+# Usage: ggrst filename
 ggrst(){
   git restore "$1"
 }
 
 # Delete remote branch
+# Usage: gdrb branch_name
 gdrb(){
   git push origin --delete "$1"
 }
 
 # Delete local branch
+# Usage: gdb branch_name
 gdb(){
   git branch -d "$1"
 }
-# Clone
+
+# Clone repository
+# Usage: ggcl repository_url
 ggcl(){
   git clone $1
 }
 
-# Avoid asking for passphrase every time during git operations
+# Add SSH key to agent
+# Usage: gsshadd
 gsshadd(){
   eval "$(ssh-agent -s)"
   ssh-add ~/.ssh/id_ed25519 2>/dev/null
