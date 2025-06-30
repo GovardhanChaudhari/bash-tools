@@ -43,7 +43,7 @@ sudo mv nvim.appimage /usr/local/bin/nvim
 
 # 6. Verify installation
 msg "Verifying Neovim installation..."
-if command -v nvim &> /dev/null; then
+if aif nvim; then
     msg "Neovim installed successfully!"
     nvim --version || true
 else

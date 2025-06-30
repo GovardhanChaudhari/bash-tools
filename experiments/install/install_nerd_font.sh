@@ -8,6 +8,12 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=utils.sh
 source "${SCRIPT_DIR}/utils.sh"
 
+# ------------------------------- Prerequisites -------------------------------
+msg "Checking for required commands (wget, unzip, fc-cache)"
+if ! aif wget; then err "wget is required but not found"; exit 1; fi
+if ! aif unzip; then err "unzip is required but not found"; exit 1; fi
+if ! aif fc-cache; then err "fc-cache is required but not found"; exit 1; fi
+
 FONT_NAME="SourceCodePro"
 FONT_DOWNLOAD_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/${FONT_NAME}.zip"
 INSTALL_DIR="$HOME/.local/share/fonts/NerdFonts"
@@ -22,21 +28,9 @@ mkdir -p "$INSTALL_DIR"
 msg "Downloading font from ${FONT_DOWNLOAD_URL}..."
 wget -q --show-progress -O "$TEMP_DIR/${FONT_NAME}.zip" "$FONT_DOWNLOAD_URL"
 
-if [ $? -ne 0 ]; then
-    err "Failed to download the font file. Please check the URL and your internet connection."
-    rm -rf "$TEMP_DIR"
-    exit 1
-fi
-
 # 3. Unzip the font file
 msg "Unzipping font files to a temporary directory..."
 unzip -q "$TEMP_DIR/${FONT_NAME}.zip" -d "$TEMP_DIR/$FONT_NAME"
-
-if [ $? -ne 0 ]; then
-    err "Failed to unzip the font file."
-    rm -rf "$TEMP_DIR"
-    exit 1
-fi
 
 # 4. Move the font files to the installation directory
 msg "Moving font files to ${INSTALL_DIR}..."

@@ -30,8 +30,8 @@ source "${SCRIPT_DIR}/utils.sh"
 
 # ------------------------------- Prerequisites -------------------------------
 msg "Checking for required commands (curl, sudo)"
-command -v curl >/dev/null 2>&1 || { err "curl is required but not found"; exit 1; }
-command -v sudo >/dev/null 2>&1 || { err "sudo is required but not found"; exit 1; }
+if ! aif curl; then err "curl is required but not found"; exit 1; fi
+if ! aif sudo; then err "sudo is required but not found"; exit 1; fi
 
 # --------------------------- Detect Architecture -----------------------------
 ARCH="$(uname -m)"
