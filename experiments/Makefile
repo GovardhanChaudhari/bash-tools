@@ -10,7 +10,7 @@
 # --- Configuration Variables ---
 # Latest Raspberry Pi OS Lite (64-bit) Bookworm image URL
 # ALWAYS VERIFY THIS URL ON THE OFFICIAL RASPBERRY PI WEBSITE FOR THE LATEST VERSION!
-IMAGE_URL := https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2024-03-15/2024-03-15-raspios-bookworm-arm64-lite.img.xz
+IMAGE_URL := https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2025-05-13/2025-05-13-raspios-bookworm-arm64-lite.img.xz
 IMAGE_XZ_FILENAME := $(notdir $(IMAGE_URL))
 IMAGE_FILENAME := $(basename $(IMAGE_XZ_FILENAME))
 
