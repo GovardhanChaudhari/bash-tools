@@ -54,7 +54,7 @@ USB_DEVICE_NAME ?=
 export USB_DEVICE_NAME
 
 # --- Phony Targets ---
-.PHONY: all setup_drive download_image mount_partitions copy_files configure_os configure_swap cleanup help
+.PHONY: all setup_drive download_image mount_partitions copy_files configure_os configure_swap cleanup help check_requirements list_drives
 
 # Default target
 all: check_requirements setup_drive download_image mount_partitions copy_files configure_os configure_swap cleanup
@@ -64,7 +64,8 @@ help:
 	@echo ""
 	@echo "Targets:"
 	@echo "  all               : Runs all steps from partitioning to cleanup (default)."
-	@echo "  setup_drive       : Prompts for USB drive, unmounts, partitions, and formats it."
+	@echo "  list_drives       : Lists all available drives without making any changes."
+	@echo "  setup_drive       : Prompts for USB drive selection, unmounts, partitions, and formats it."
 	@echo "  download_image    : Downloads and decompresses the Raspberry Pi OS image."
 	@echo "  mount_partitions  : Mounts the newly created partitions on the target drive and image partitions."
 	@echo "  copy_files        : Copies OS files from the image to the new partitions."
@@ -97,35 +98,86 @@ check_requirements:
 	@echo "All required tools are installed."
 	@echo ""
 
+# List available drives without making changes
+list_drives:
+	@echo "--- Available Disk Drives ---"
+	@echo ""
+	@DRIVE_LIST=$$(lsblk -d -n -o NAME,SIZE,MODEL,VENDOR,TYPE | grep -E 'disk' | nl -v 0); \
+	if [ -z "$${DRIVE_LIST}" ]; then \
+		echo "No disk drives found."; \
+		exit 0; \
+	fi; \
+	echo "$${DRIVE_LIST}" | while IFS= read -r line; do \
+		NUM=$$(echo "$${line}" | awk '{print $$1}'); \
+		NAME=$$(echo "$${line}" | awk '{print $$2}'); \
+		SIZE=$$(echo "$${line}" | awk '{print $$3}'); \
+		MODEL=$$(echo "$${line}" | awk '{for(i=4;i<=NF-1;i++) printf "%s ", $$i; print ""}' | sed 's/[[:space:]]*$$//'); \
+		echo "  [$${NUM}] /dev/$${NAME} - $${SIZE} - $${MODEL}"; \
+		echo "       Partitions:"; \
+		lsblk -n -o NAME,SIZE,FSTYPE,MOUNTPOINTS "/dev/$${NAME}" 2>/dev/null | grep -v "^$${NAME} " | sed 's/^/         /' || echo "         No partitions"; \
+		echo ""; \
+	done
+	@echo "Note: Use 'make setup_drive' to select and prepare a drive for Raspberry Pi OS installation."
+
 # --- Targets ---
 
 setup_drive:
 	@echo "--- Starting: Setup Drive ---"
-	@echo "Available disk drives:"
-	@lsblk -o NAME,SIZE,MODEL,VENDOR,TYPE,MOUNTPOINTS | grep -E 'disk|usb'
+	@echo "Detecting available drives..."
 	@echo ""
-	@# Prompt for USB device if not provided
+	@# Create a numbered list of available drives
 	@if [ -z "$(USB_DEVICE_NAME)" ]; then \
-		read -p "Enter the device name of your USB drive (e.g., sda, sdb, sdc): " USB_DEVICE_NAME_INPUT; \
-		USB_DEVICE_NAME=$${USB_DEVICE_NAME_INPUT}; \
+		echo "Available disk drives:"; \
+		echo ""; \
+		DRIVE_LIST=$$(lsblk -d -n -o NAME,SIZE,MODEL,VENDOR,TYPE | grep -E 'disk' | nl -v 0); \
+		if [ -z "$${DRIVE_LIST}" ]; then \
+			echo "ERROR: No disk drives found." >&2; \
+			exit 1; \
+		fi; \
+		echo "$${DRIVE_LIST}" | while IFS= read -r line; do \
+			NUM=$$(echo "$${line}" | awk '{print $$1}'); \
+			NAME=$$(echo "$${line}" | awk '{print $$2}'); \
+			SIZE=$$(echo "$${line}" | awk '{print $$3}'); \
+			MODEL=$$(echo "$${line}" | awk '{for(i=4;i<=NF-1;i++) printf "%s ", $$i; print ""}' | sed 's/[[:space:]]*$$//'); \
+			echo "  [$${NUM}] /dev/$${NAME} - $${SIZE} - $${MODEL}"; \
+		done; \
+		echo ""; \
+		echo "  [x] Exit without making changes"; \
+		echo ""; \
+		read -p "Select drive number (or 'x' to exit): " SELECTION; \
+		if [ "$${SELECTION}" = "x" ] || [ "$${SELECTION}" = "X" ]; then \
+			echo "Exiting without changes."; \
+			exit 0; \
+		fi; \
+		if ! echo "$${SELECTION}" | grep -qE '^[0-9]+$$'; then \
+			echo "ERROR: Invalid selection. Please enter a number." >&2; \
+			exit 1; \
+		fi; \
+		USB_DEVICE_NAME=$$(echo "$${DRIVE_LIST}" | sed -n "$$(($${SELECTION} + 1))p" | awk '{print $$2}'); \
+		if [ -z "$${USB_DEVICE_NAME}" ]; then \
+			echo "ERROR: Invalid drive number selected." >&2; \
+			exit 1; \
+		fi; \
 	else \
 		USB_DEVICE_NAME=$(USB_DEVICE_NAME); \
-	fi; \
-	if [ -z "$${USB_DEVICE_NAME}" ]; then \
-		echo "ERROR: No device name entered. Exiting." >&2; \
-		exit 1; \
 	fi; \
 	TARGET_DRIVE="/dev/$${USB_DEVICE_NAME}"; \
 	if [ ! -b "$${TARGET_DRIVE}" ]; then \
 		echo "ERROR: $${TARGET_DRIVE} is not a valid block device. Exiting." >&2; \
 		exit 1; \
 	fi; \
+	echo ""; \
 	echo "You have selected: $${TARGET_DRIVE}"; \
-	echo "Contents of $${TARGET_DRIVE}:"; \
-	sudo fdisk -l "$${TARGET_DRIVE}" || true; \
-	read -p "Are you absolutely sure you want to proceed and erase all data on $${TARGET_DRIVE}? (yes/no): " CONFIRMATION; \
+	echo ""; \
+	echo "Details of selected drive:"; \
+	lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS,MODEL,VENDOR "$${TARGET_DRIVE}" 2>/dev/null || true; \
+	echo ""; \
+	echo "Partition layout:"; \
+	sudo fdisk -l "$${TARGET_DRIVE}" 2>/dev/null | grep -E "^(/dev/|Disk model:|Disk /dev/)" || true; \
+	echo ""; \
+	read -p "Are you absolutely sure you want to proceed and ERASE ALL DATA on $${TARGET_DRIVE}? (yes/no): " CONFIRMATION; \
 	if [ "$${CONFIRMATION}" != "yes" ] && [ "$${CONFIRMATION}" != "YES" ]; then \
-		echo "ERROR: Confirmation failed. Exiting." >&2; \
+		echo "Operation cancelled. Exiting." >&2; \
 		exit 1; \
 	fi; \
 	echo "Proceeding with installation on $${TARGET_DRIVE}..."; \
