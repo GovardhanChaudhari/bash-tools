@@ -6,6 +6,16 @@
 # 4. THE SCRIPT USES 'sudo' FOR ALL DISK OPERATIONS.
 # 5. IT IS HIGHLY RECOMMENDED TO BACK UP ANY IMPORTANT DATA BEFORE PROCEEDING.
 # 6. MAKE SURE 'parted', 'mkfs.vfat', 'mkfs.ext4', 'wget', 'unxz', 'rsync', 'blkid', 'fallocate', 'mkswap', 'chroot' are installed.
+#
+# --- Partition Layout Strategy ---
+# This Makefile creates a 3-partition layout optimized for USB boot on Raspberry Pi:
+# 1. /boot (FAT32): Kernel, firmware, and boot configuration files
+# 2. / (ext4): Root filesystem for OS and installed packages
+# 3. /home (ext4): User data and swap file - uses remaining drive space
+# Special configurations:
+# - /var and /tmp are mounted as tmpfs (RAM) for power-cut resilience
+# - Swap file is placed on /home partition for flexibility
+# - All partitions use PARTUUID for reliable mounting
 
 # --- Configuration Variables ---
 # Latest Raspberry Pi OS Lite (64-bit) Bookworm image URL
@@ -15,9 +25,18 @@ IMAGE_XZ_FILENAME := $(notdir $(IMAGE_URL))
 IMAGE_FILENAME := $(basename $(IMAGE_XZ_FILENAME))
 
 # Partition Sizes (adjust as needed, in MiB)
+# -----------------------------------------
+# BOOT_SIZE_MIB: 1GB boot partition to comfortably hold kernel, firmware, overlays, and accommodate OS updates.
+#                This size allows extra space for future versions or custom kernels without requiring repartitioning.
 BOOT_SIZE_MIB := 1024  # 1GB for /boot
+# ROOT_SIZE_MIB: 8GB root filesystem partition is selected as a balance between minimal footprint and usability,
+#               leaving adequate room for installed packages, system logs, and user programs.
 ROOT_SIZE_MIB := 8192  # 8GB for / (rootfs)
+# VAR_TMPFS_SIZE_MIB: 256MB tmpfs allocated to /var to store volatile data like logs and caches in RAM,
+#                     which improves lifespan of SD card and speeds up write-heavy operations, at cost of data persistence.
 VAR_TMPFS_SIZE_MIB := 256 # 256MB for /var (tmpfs, in RAM)
+# SWAP_FILE_SIZE_GB: 2GB swap file size chosen to provide additional virtual memory without excessive SD card wear,
+#                    useful for memory-intensive workloads or running multiple applications simultaneously.
 SWAP_FILE_SIZE_GB := 2 # 2GB for swap file
 
 # Temporary Mount Points
@@ -27,11 +46,18 @@ NEW_HOME_MNT := /mnt/new_rpi_home
 IMG_BOOT_MNT := /mnt/img_rpi_boot
 IMG_ROOT_MNT := /mnt/img_rpi_root
 
+# USB Device - can be overridden from command line
+# Example: make all USB_DEVICE_NAME=sdb
+USB_DEVICE_NAME ?=
+
+# Export USB_DEVICE_NAME so it's available to all shell commands
+export USB_DEVICE_NAME
+
 # --- Phony Targets ---
 .PHONY: all setup_drive download_image mount_partitions copy_files configure_os configure_swap cleanup help
 
 # Default target
-all: setup_drive download_image mount_partitions copy_files configure_os configure_swap cleanup
+all: check_requirements setup_drive download_image mount_partitions copy_files configure_os configure_swap cleanup
 
 help:
 	@echo "Usage: make [target]"
@@ -56,6 +82,21 @@ help:
 	@echo ""
 	@echo "IMPORTANT: Always verify USB_DEVICE_NAME before running any target that modifies the disk!"
 
+check_requirements:
+	@echo "--- Checking for required tools ---"
+	@command -v parted >/dev/null 2>&1 || { echo "ERROR: parted is not installed. Please install it first." >&2; exit 1; }
+	@command -v mkfs.vfat >/dev/null 2>&1 || { echo "ERROR: mkfs.vfat is not installed. Please install dosfstools." >&2; exit 1; }
+	@command -v mkfs.ext4 >/dev/null 2>&1 || { echo "ERROR: mkfs.ext4 is not installed. Please install e2fsprogs." >&2; exit 1; }
+	@command -v wget >/dev/null 2>&1 || { echo "ERROR: wget is not installed. Please install it first." >&2; exit 1; }
+	@command -v unxz >/dev/null 2>&1 || { echo "ERROR: unxz is not installed. Please install xz-utils." >&2; exit 1; }
+	@command -v rsync >/dev/null 2>&1 || { echo "ERROR: rsync is not installed. Please install it first." >&2; exit 1; }
+	@command -v blkid >/dev/null 2>&1 || { echo "ERROR: blkid is not installed. Please install util-linux." >&2; exit 1; }
+	@command -v fallocate >/dev/null 2>&1 || { echo "ERROR: fallocate is not installed. Please install util-linux." >&2; exit 1; }
+	@command -v mkswap >/dev/null 2>&1 || { echo "ERROR: mkswap is not installed. Please install util-linux." >&2; exit 1; }
+	@command -v chroot >/dev/null 2>&1 || { echo "ERROR: chroot is not installed. Please install coreutils." >&2; exit 1; }
+	@echo "All required tools are installed."
+	@echo ""
+
 # --- Targets ---
 
 setup_drive:
@@ -63,67 +104,73 @@ setup_drive:
 	@echo "Available disk drives:"
 	@lsblk -o NAME,SIZE,MODEL,VENDOR,TYPE,MOUNTPOINTS | grep -E 'disk|usb'
 	@echo ""
+	@# Prompt for USB device if not provided
 	@if [ -z "$(USB_DEVICE_NAME)" ]; then \
 		read -p "Enter the device name of your USB drive (e.g., sda, sdb, sdc): " USB_DEVICE_NAME_INPUT; \
-		export USB_DEVICE_NAME=$${USB_DEVICE_NAME_INPUT}; \
-	fi
-	@if [ -z "$(USB_DEVICE_NAME)" ]; then \
+		USB_DEVICE_NAME=$${USB_DEVICE_NAME_INPUT}; \
+	else \
+		USB_DEVICE_NAME=$(USB_DEVICE_NAME); \
+	fi; \
+	if [ -z "$${USB_DEVICE_NAME}" ]; then \
 		echo "ERROR: No device name entered. Exiting." >&2; \
 		exit 1; \
-	fi
-	@export TARGET_DRIVE="/dev/$(USB_DEVICE_NAME)"
-	@if [[ ! -b "$(TARGET_DRIVE)" ]]; then \
-		echo "ERROR: $(TARGET_DRIVE) is not a valid block device. Exiting." >&2; \
+	fi; \
+	TARGET_DRIVE="/dev/$${USB_DEVICE_NAME}"; \
+	if [ ! -b "$${TARGET_DRIVE}" ]; then \
+		echo "ERROR: $${TARGET_DRIVE} is not a valid block device. Exiting." >&2; \
 		exit 1; \
-	fi
-	@echo "You have selected: $(TARGET_DRIVE)"
-	@echo "Contents of $(TARGET_DRIVE):"
-	@sudo fdisk -l "$(TARGET_DRIVE)" || true
-	@read -p "Are you absolutely sure you want to proceed and erase all data on $(TARGET_DRIVE)? (yes/no): " CONFIRMATION; \
-	if [[ ! "$$CONFIRMATION" =~ ^[Yy][Ee][Ss]$$ ]]; then \
+	fi; \
+	echo "You have selected: $${TARGET_DRIVE}"; \
+	echo "Contents of $${TARGET_DRIVE}:"; \
+	sudo fdisk -l "$${TARGET_DRIVE}" || true; \
+	read -p "Are you absolutely sure you want to proceed and erase all data on $${TARGET_DRIVE}? (yes/no): " CONFIRMATION; \
+	if [ "$${CONFIRMATION}" != "yes" ] && [ "$${CONFIRMATION}" != "YES" ]; then \
 		echo "ERROR: Confirmation failed. Exiting." >&2; \
 		exit 1; \
-	fi
-	@echo "Proceeding with installation on $(TARGET_DRIVE)..."
-	@sleep 2
-
-	@echo "--- Unmounting existing partitions on $(TARGET_DRIVE) ---"
-	@for part in $$(lsblk -n -o NAME "$(TARGET_DRIVE)" | grep -E "$(USB_DEVICE_NAME)[0-9]+"); do \
+	fi; \
+	echo "Proceeding with installation on $${TARGET_DRIVE}..."; \
+	sleep 2; \
+	echo "--- Unmounting existing partitions on $${TARGET_DRIVE} ---"; \
+	for part in $$(lsblk -n -o NAME "$${TARGET_DRIVE}" | grep -E "$${USB_DEVICE_NAME}[0-9]+"); do \
 		if mountpoint -q "/dev/$$part"; then \
 			echo "Unmounting /dev/$$part..."; \
 			sudo umount "/dev/$$part" || { echo "ERROR: Failed to unmount /dev/$$part. Please unmount manually and retry." >&2; exit 1; }; \
 		fi; \
-	done
-	@sudo partprobe "$(TARGET_DRIVE)"
-
-	@echo "--- Partitioning $(TARGET_DRIVE) with GPT ---"
-	@BOOT_END_MIB=$$(($(BOOT_SIZE_MIB)))
-	@ROOT_END_MIB=$$(($$(BOOT_END_MIB) + $$(ROOT_SIZE_MIB)))
-
-	@sudo parted -s "$(TARGET_DRIVE)" mklabel gpt || { echo "ERROR: Failed to create GPT partition table." >&2; exit 1; }
-	@sudo parted -s "$(TARGET_DRIVE)" mkpart primary fat32 0% "$${BOOT_END_MIB}MiB" || { echo "ERROR: Failed to create /boot partition." >&2; exit 1; }
-	@sudo parted -s "$(TARGET_DRIVE)" name 1 boot || { echo "ERROR: Failed to name /boot partition." >&2; exit 1; }
-	@sudo parted -s "$(TARGET_DRIVE)" set 1 boot on || { echo "ERROR: Failed to set boot flag on /boot partition." >&2; exit 1; }
-	@sudo parted -s "$(TARGET_DRIVE)" mkpart primary ext4 "$${BOOT_END_MIB}MiB" "$${ROOT_END_MIB}MiB" || { echo "ERROR: Failed to create / (root) partition." >&2; exit 1; }
-	@sudo parted -s "$(TARGET_DRIVE)" name 2 rootfs || { echo "ERROR: Failed to name / (root) partition." >&2; exit 1; }
-	@sudo parted -s "$(TARGET_DRIVE)" mkpart primary ext4 "$${ROOT_END_MIB}MiB" 100% || { echo "ERROR: Failed to create /home partition." >&2; exit 1; }
-	@sudo parted -s "$(TARGET_DRIVE)" name 3 homefs || { echo "ERROR: Failed to name /home partition." >&2; exit 1; }
-
-	@echo "Partitioning complete. New partition table:"
-	@sudo fdisk -l "$(TARGET_DRIVE)"
-	@sudo partprobe "$(TARGET_DRIVE)"
-	@sleep 2
-
-	@echo "--- Formatting partitions ---"
-	@sudo mkfs.vfat -F 32 "$(TARGET_DRIVE)1" || { echo "ERROR: Failed to format /boot partition." >&2; exit 1; }
-	@sudo mkfs.ext4 -F "$(TARGET_DRIVE)2" || { echo "ERROR: Failed to format / (root) partition." >&2; exit 1; }
-	@sudo mkfs.ext4 -F "$(TARGET_DRIVE)3" || { echo "ERROR: Failed to format /home partition." >&2; exit 1; }
-	@echo "Formatting complete."
-	@sleep 2
+	done; \
+	sudo partprobe "$${TARGET_DRIVE}"; \
+	echo "--- Partitioning $${TARGET_DRIVE} with GPT ---"; \
+	BOOT_END_MIB=$$(($(BOOT_SIZE_MIB))); \
+	ROOT_END_MIB=$$(($$BOOT_END_MIB + $(ROOT_SIZE_MIB))); \
+	sudo parted -s "$${TARGET_DRIVE}" mklabel gpt || { echo "ERROR: Failed to create GPT partition table." >&2; exit 1; }; \
+	sudo parted -s "$${TARGET_DRIVE}" mkpart primary fat32 0% "$${BOOT_END_MIB}MiB" || { echo "ERROR: Failed to create /boot partition." >&2; exit 1; }; \
+	sudo parted -s "$${TARGET_DRIVE}" name 1 boot || { echo "ERROR: Failed to name /boot partition." >&2; exit 1; }; \
+	sudo parted -s "$${TARGET_DRIVE}" set 1 boot on || { echo "ERROR: Failed to set boot flag on /boot partition." >&2; exit 1; }; \
+	sudo parted -s "$${TARGET_DRIVE}" mkpart primary ext4 "$${BOOT_END_MIB}MiB" "$${ROOT_END_MIB}MiB" || { echo "ERROR: Failed to create / (root) partition." >&2; exit 1; }; \
+	sudo parted -s "$${TARGET_DRIVE}" name 2 rootfs || { echo "ERROR: Failed to name / (root) partition." >&2; exit 1; }; \
+	sudo parted -s "$${TARGET_DRIVE}" mkpart primary ext4 "$${ROOT_END_MIB}MiB" 100% || { echo "ERROR: Failed to create /home partition." >&2; exit 1; }; \
+	sudo parted -s "$${TARGET_DRIVE}" name 3 homefs || { echo "ERROR: Failed to name /home partition." >&2; exit 1; }; \
+	echo "Partitioning complete. New partition table:"; \
+	sudo fdisk -l "$${TARGET_DRIVE}"; \
+	sudo partprobe "$${TARGET_DRIVE}"; \
+	sleep 2; \
+	echo "--- Formatting partitions ---"; \
+	sudo mkfs.vfat -F 32 "$${TARGET_DRIVE}1" || { echo "ERROR: Failed to format /boot partition." >&2; exit 1; }; \
+	sudo mkfs.ext4 -F "$${TARGET_DRIVE}2" || { echo "ERROR: Failed to format / (root) partition." >&2; exit 1; }; \
+	sudo mkfs.ext4 -F "$${TARGET_DRIVE}3" || { echo "ERROR: Failed to format /home partition." >&2; exit 1; }; \
+	echo "Formatting complete."; \
+	sleep 2
 	@echo "--- Finished: Setup Drive ---"
 
 download_image:
 	@echo "--- Starting: Download Image ---"
+	@# Check available disk space before downloading (need ~2.5GB for compressed + uncompressed)
+	@REQUIRED_SPACE_MB=2500; \
+	AVAILABLE_SPACE_KB=$$(df . | tail -1 | awk '{print $$4}'); \
+	AVAILABLE_SPACE_MB=$$(($$AVAILABLE_SPACE_KB / 1024)); \
+	if [ $$AVAILABLE_SPACE_MB -lt $$REQUIRED_SPACE_MB ]; then \
+		echo "ERROR: Insufficient disk space. Need at least $${REQUIRED_SPACE_MB}MB, but only $${AVAILABLE_SPACE_MB}MB available." >&2; \
+		exit 1; \
+	fi
 	@if [ ! -f "$(IMAGE_FILENAME)" ]; then \
 		if [ ! -f "$(IMAGE_XZ_FILENAME)" ]; then \
 			echo "Downloading $(IMAGE_XZ_FILENAME)..."; \
@@ -139,13 +186,19 @@ download_image:
 
 mount_partitions: setup_drive download_image
 	@echo "--- Starting: Mount Partitions ---"
-	@echo "--- Mounting new partitions on $(TARGET_DRIVE) ---"
-	@sudo mkdir -p "$(NEW_BOOT_MNT)" "$(NEW_ROOT_MNT)" "$(NEW_HOME_MNT)" || { echo "ERROR: Failed to create mount points." >&2; exit 1; }
-	@sudo mount "$(TARGET_DRIVE)1" "$(NEW_BOOT_MNT)" || { echo "ERROR: Failed to mount $(TARGET_DRIVE)1 to $(NEW_BOOT_MNT)." >&2; exit 1; }
-	@sudo mount "$(TARGET_DRIVE)2" "$(NEW_ROOT_MNT)" || { echo "ERROR: Failed to mount $(TARGET_DRIVE)2 to $(NEW_ROOT_MNT)." >&2; exit 1; }
-	@sudo mount "$(TARGET_DRIVE)3" "$(NEW_HOME_MNT)" || { echo "ERROR: Failed to mount $(TARGET_DRIVE)3 to $(NEW_HOME_MNT)." >&2; exit 1; }
-	@echo "New partitions mounted."
-	@sleep 2
+	@echo "--- Mounting new partitions ---"
+	@# Re-determine TARGET_DRIVE from USB_DEVICE_NAME
+	@if [ -z "$(USB_DEVICE_NAME)" ]; then \
+		echo "ERROR: USB_DEVICE_NAME not set. Please specify it when running make (e.g., make mount_partitions USB_DEVICE_NAME=sdb)." >&2; \
+		exit 1; \
+	fi
+	@TARGET_DRIVE="/dev/$(USB_DEVICE_NAME)"; \
+	sudo mkdir -p "$(NEW_BOOT_MNT)" "$(NEW_ROOT_MNT)" "$(NEW_HOME_MNT)" || { echo "ERROR: Failed to create mount points." >&2; exit 1; }; \
+	sudo mount "$${TARGET_DRIVE}1" "$(NEW_BOOT_MNT)" || { echo "ERROR: Failed to mount $${TARGET_DRIVE}1 to $(NEW_BOOT_MNT)." >&2; exit 1; }; \
+	sudo mount "$${TARGET_DRIVE}2" "$(NEW_ROOT_MNT)" || { echo "ERROR: Failed to mount $${TARGET_DRIVE}2 to $(NEW_ROOT_MNT)." >&2; exit 1; }; \
+	sudo mount "$${TARGET_DRIVE}3" "$(NEW_HOME_MNT)" || { echo "ERROR: Failed to mount $${TARGET_DRIVE}3 to $(NEW_HOME_MNT)." >&2; exit 1; }; \
+	echo "New partitions mounted."; \
+	sleep 2
 
 	@echo "--- Mounting Raspberry Pi OS image partitions ---"
 	@IMAGE_PART_INFO=$$(sudo fdisk -l "$(IMAGE_FILENAME)" | grep -E "$(IMAGE_FILENAME)[0-9]+")
@@ -200,63 +253,58 @@ copy_files: mount_partitions
 configure_os: copy_files
 	@echo "--- Starting: Configure OS ---"
 	@echo "--- Configuring cmdline.txt ---"
-	@NEW_ROOT_PARTUUID=$$(sudo blkid -s PARTUUID -o value "$(TARGET_DRIVE)2")
-	@if [ -z "$${NEW_ROOT_PARTUUID}" ]; then \
-		echo "ERROR: Could not get PARTUUID for new root partition." >&2; \
+	@# Re-determine TARGET_DRIVE from USB_DEVICE_NAME
+	@if [ -z "$(USB_DEVICE_NAME)" ]; then \
+		echo "ERROR: USB_DEVICE_NAME not set. Please specify it when running make." >&2; \
 		exit 1; \
 	fi
-
-	@CMDLINE_TXT_PATH="$(NEW_BOOT_MNT)/cmdline.txt"
-	@if [ ! -f "$${CMDLINE_TXT_PATH}" ]; then \
+	@TARGET_DRIVE="/dev/$(USB_DEVICE_NAME)"; \
+	NEW_ROOT_PARTUUID=$$(sudo blkid -s PARTUUID -o value "$${TARGET_DRIVE}2"); \
+	if [ -z "$${NEW_ROOT_PARTUUID}" ]; then \
+		echo "ERROR: Could not get PARTUUID for new root partition." >&2; \
+		exit 1; \
+	fi; \
+	CMDLINE_TXT_PATH="$(NEW_BOOT_MNT)/cmdline.txt"; \
+	if [ ! -f "$${CMDLINE_TXT_PATH}" ]; then \
 		echo "ERROR: $${CMDLINE_TXT_PATH} not found. Copying might have failed." >&2; \
 		exit 1; \
 	fi
 
 	@sudo sed -i "s|root=PARTUUID=[0-9a-fA-F-]\{8\}-[0-9a-fA-F]\{2\}|root=PARTUUID=$${NEW_ROOT_PARTUUID}|" "$${CMDLINE_TXT_PATH}" || { echo "ERROR: Failed to update cmdline.txt." >&2; exit 1; }
 	@echo "cmdline.txt updated with new root PARTUUID."
-	@sleep 2
-
 	@echo "--- Configuring fstab ---"
-	# Create the fstab content using a separate script to avoid Makefile heredoc indentation issues
-	@NEW_BOOT_PARTUUID=$$(sudo blkid -s PARTUUID -o value "$(TARGET_DRIVE)1")
-	@NEW_HOME_PARTUUID=$$(sudo blkid -s PARTUUID -o value "$(TARGET_DRIVE)3")
-	@if [ -z "$${NEW_BOOT_PARTUUID}" ] || [ -z "$${NEW_HOME_PARTUUID}" ]; then \
+	@# Get all PARTUUIDs for the new partitions
+	@TARGET_DRIVE="/dev/$(USB_DEVICE_NAME)"; \
+	NEW_BOOT_PARTUUID=$$(sudo blkid -s PARTUUID -o value "$${TARGET_DRIVE}1"); \
+	NEW_ROOT_PARTUUID=$$(sudo blkid -s PARTUUID -o value "$${TARGET_DRIVE}2"); \
+	NEW_HOME_PARTUUID=$$(sudo blkid -s PARTUUID -o value "$${TARGET_DRIVE}3"); \
+	if [ -z "$${NEW_BOOT_PARTUUID}" ] || [ -z "$${NEW_ROOT_PARTUUID}" ] || [ -z "$${NEW_HOME_PARTUUID}" ]; then \
 		echo "ERROR: Could not get all PARTUUIDs for new partitions." >&2; \
 		exit 1; \
-	fi
-	@echo "Generating write_fstab.sh script..."
-	@echo "#!/bin/bash" > write_fstab.sh
-	@echo "NEW_BOOT_PARTUUID=\"$${NEW_BOOT_PARTUUID}\"" >> write_fstab.sh
-	@echo "NEW_ROOT_PARTUUID=\"$${NEW_ROOT_PARTUUID}\"" >> write_fstab.sh
-	@echo "NEW_HOME_PARTUUID=\"$${NEW_HOME_PARTUUID}\"" >> write_fstab.sh
-	@echo "VAR_TMPFS_SIZE_MIB=\"$$(VAR_TMPFS_SIZE_MIB)\"" >> write_fstab.sh
-	@echo "cat <<EOF > \"$1\"" >> write_fstab.sh
-	@echo "# This is /etc/fstab for the new Raspberry Pi OS installation." >> write_fstab.sh
-	@echo "# Please keep this file in sync with the /etc/fstab file of the" >> write_fstab.sh
-	@echo "# system that mounted this file." >> write_fstab.sh
-	@echo "# For more info, see fstab(5)." >> write_fstab.sh
-	@echo "" >> write_fstab.sh
-	@echo "# /boot partition" >> write_fstab.sh
-	@echo "PARTUUID=$${NEW_BOOT_PARTUUID} /boot           vfat    defaults,noatime  0       2" >> write_fstab.sh
-	@echo "" >> write_fstab.sh
-	@echo "# / (root) partition" >> write_fstab.sh
-	@echo "PARTUUID=$${NEW_ROOT_PARTUUID} /               ext4    defaults,noatime  0       1" >> write_fstab.sh
-	@echo "" >> write_fstab.sh
-	@echo "# /home partition" >> write_fstab.sh
-	@echo "PARTUUID=$${NEW_HOME_PARTUUID} /home           ext4    defaults,noatime  0       2" >> write_fstab.sh
-	@echo "" >> write_fstab.sh
-	@echo "# /var as tmpfs (RAM-based, volatile for power-cut resilience)" >> write_fstab.sh
-	@echo "tmpfs /var              tmpfs   defaults,noatime,nosuid,size=$${VAR_TMPFS_SIZE_MIB}M        0       0" >> write_fstab.sh
-	@echo "" >> write_fstab.sh
-	@echo "# /tmp as tmpfs (RAM-based, volatile)" >> write_fstab.sh
-	@echo "tmpfs /tmp              tmpfs   defaults,noatime,nosuid,size=64M         0       0" >> write_fstab.sh
-	@echo "" >> write_fstab.sh
-	@echo "# Swap file (will be created on /home)" >> write_fstab.sh
-	@echo "/home/swapfile none swap defaults 0 0" >> write_fstab.sh
-	@echo "EOF" >> write_fstab.sh
-	@chmod +x write_fstab.sh
-	@sudo ./write_fstab.sh "$(NEW_ROOT_MNT)/etc/fstab" || { echo "ERROR: Failed to write fstab using wrapper script." >&2; exit 1; }
-	@rm write_fstab.sh # Clean up the temporary script
+	fi; \
+	echo "Writing new fstab..."; \
+	{ echo "# This is /etc/fstab for the new Raspberry Pi OS installation."; \
+	echo "# Please keep this file in sync with the /etc/fstab file of the"; \
+	echo "# system that mounted this file."; \
+	echo "# For more info, see fstab(5)."; \
+	echo ""; \
+	echo "# /boot partition"; \
+	echo "PARTUUID=$${NEW_BOOT_PARTUUID} /boot           vfat    defaults,noatime  0       2"; \
+	echo ""; \
+	echo "# / (root) partition"; \
+	echo "PARTUUID=$${NEW_ROOT_PARTUUID} /               ext4    defaults,noatime  0       1"; \
+	echo ""; \
+	echo "# /home partition"; \
+	echo "PARTUUID=$${NEW_HOME_PARTUUID} /home           ext4    defaults,noatime  0       2"; \
+	echo ""; \
+	echo "# /var as tmpfs (RAM-based, volatile for power-cut resilience)"; \
+	echo "tmpfs /var              tmpfs   defaults,noatime,nosuid,size=$(VAR_TMPFS_SIZE_MIB)M        0       0"; \
+	echo ""; \
+	echo "# /tmp as tmpfs (RAM-based, volatile)"; \
+	echo "tmpfs /tmp              tmpfs   defaults,noatime,nosuid,size=64M         0       0"; \
+	echo ""; \
+	echo "# Swap file (will be created on /home)"; \
+	echo "/home/swapfile none swap defaults 0 0"; } | sudo tee "$(NEW_ROOT_MNT)/etc/fstab" > /dev/null || { echo "ERROR: Failed to write fstab." >&2; exit 1; }
 	@echo "fstab configured."
 	@sleep 2
 	@echo "--- Finished: Configure OS ---"
