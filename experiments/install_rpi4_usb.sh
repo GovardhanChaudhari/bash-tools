@@ -25,7 +25,6 @@ SWAP_FILE_SIZE_GB=2 # 2GB for swap file
 NEW_BOOT_MNT="/mnt/new_rpi_boot"
 NEW_ROOT_MNT="/mnt/new_rpi_root"
 NEW_HOME_MNT="/mnt/new_rpi_home"
-NEW_DATA_MNT="/mnt/new_rpi_data"
 IMG_BOOT_MNT="/mnt/img_rpi_boot"
 IMG_ROOT_MNT="/mnt/img_rpi_root"
 
@@ -42,7 +41,7 @@ error_exit() {
 cleanup_on_exit() {
     echo "--- Cleaning up temporary mounts and files ---"
     # Unmount new partitions
-    for mnt in "$NEW_BOOT_MNT" "$NEW_ROOT_MNT" "$NEW_HOME_MNT" "$NEW_DATA_MNT"; do
+    for mnt in "$NEW_BOOT_MNT" "$NEW_ROOT_MNT" "$NEW_HOME_MNT"; do
         if mountpoint -q "$mnt"; then
             echo "Unmounting $mnt..."
             sudo umount "$mnt" || echo "Warning: Could not unmount $mnt. Manual unmount may be required."
@@ -129,9 +128,6 @@ echo "--- Partitioning $TARGET_DRIVE with GPT ---"
 # Calculate end sectors for parted
 BOOT_END_MIB=$BOOT_SIZE_MIB
 ROOT_END_MIB=$((BOOT_END_MIB + ROOT_SIZE_MIB))
-HOME_START_MIB=$ROOT_END_MIB # Home starts right after root
-DATA_START_MIB=$((HOME_START_MIB + 15360)) # Example: 15GB for home, data starts after. Adjust this as needed.
-# If you want home to take all remaining space and no data partition: HOME_START_MIB=$ROOT_END_MIB and HOME_END_MIB=100%
 
 # Use 'parted' for GPT partitioning
 sudo parted -s "$TARGET_DRIVE" mklabel gpt || error_exit "Failed to create GPT partition table."
@@ -140,19 +136,14 @@ sudo parted -s "$TARGET_DRIVE" mklabel gpt || error_exit "Failed to create GPT p
 sudo parted -s "$TARGET_DRIVE" mkpart primary fat32 0% "${BOOT_END_MIB}MiB" || error_exit "Failed to create /boot partition."
 sudo parted -s "$TARGET_DRIVE" name 1 boot || error_exit "Failed to name /boot partition."
 sudo parted -s "$TARGET_DRIVE" set 1 boot on || error_exit "Failed to set boot flag on /boot partition."
-# No 'lba' flag for GPT, 'boot' and 'esp' are sufficient and handled by parted.
 
 # / (root) partition (ext4)
 sudo parted -s "$TARGET_DRIVE" mkpart primary ext4 "${BOOT_END_MIB}MiB" "${ROOT_END_MIB}MiB" || error_exit "Failed to create / (root) partition."
 sudo parted -s "$TARGET_DRIVE" name 2 rootfs || error_exit "Failed to name / (root) partition."
 
-# /home partition (ext4)
-sudo parted -s "$TARGET_DRIVE" mkpart primary ext4 "${ROOT_END_MIB}MiB" "${DATA_START_MIB}MiB" || error_exit "Failed to create /home partition."
+# /home partition (ext4) - takes all remaining space
+sudo parted -s "$TARGET_DRIVE" mkpart primary ext4 "${ROOT_END_MIB}MiB" 100% || error_exit "Failed to create /home partition."
 sudo parted -s "$TARGET_DRIVE" name 3 homefs || error_exit "Failed to name /home partition."
-
-# /data partition (ext4) - takes remaining space
-sudo parted -s "$TARGET_DRIVE" mkpart primary ext4 "${DATA_START_MIB}MiB" 100% || error_exit "Failed to create /data partition."
-sudo parted -s "$TARGET_DRIVE" name 4 datafs || error_exit "Failed to name /data partition."
 
 echo "Partitioning complete. New partition table:"
 sudo fdisk -l "$TARGET_DRIVE"
@@ -165,7 +156,6 @@ echo "--- Formatting partitions ---"
 sudo mkfs.vfat -F 32 "${TARGET_DRIVE}1" || error_exit "Failed to format /boot partition."
 sudo mkfs.ext4 -F "${TARGET_DRIVE}2" || error_exit "Failed to format / (root) partition."
 sudo mkfs.ext4 -F "${TARGET_DRIVE}3" || error_exit "Failed to format /home partition."
-sudo mkfs.ext4 -F "${TARGET_DRIVE}4" || error_exit "Failed to format /data partition."
 echo "Formatting complete."
 sleep 2
 
@@ -184,11 +174,10 @@ sleep 2
 
 # 6. Mount Newly Created Partitions on Target Drive
 echo "--- Mounting new partitions on $TARGET_DRIVE ---"
-sudo mkdir -p "$NEW_BOOT_MNT" "$NEW_ROOT_MNT" "$NEW_HOME_MNT" "$NEW_DATA_MNT" || error_exit "Failed to create mount points."
+sudo mkdir -p "$NEW_BOOT_MNT" "$NEW_ROOT_MNT" "$NEW_HOME_MNT" || error_exit "Failed to create mount points."
 sudo mount "${TARGET_DRIVE}1" "$NEW_BOOT_MNT" || error_exit "Failed to mount ${TARGET_DRIVE}1 to $NEW_BOOT_MNT."
 sudo mount "${TARGET_DRIVE}2" "$NEW_ROOT_MNT" || error_exit "Failed to mount ${TARGET_DRIVE}2 to $NEW_ROOT_MNT."
 sudo mount "${TARGET_DRIVE}3" "$NEW_HOME_MNT" || error_exit "Failed to mount ${TARGET_DRIVE}3 to $NEW_HOME_MNT."
-sudo mount "${TARGET_DRIVE}4" "$NEW_DATA_MNT" || error_exit "Failed to mount ${TARGET_DRIVE}4 to $NEW_DATA_MNT."
 echo "New partitions mounted."
 sleep 2
 
@@ -265,7 +254,7 @@ if [ -z "$NEW_ROOT_PARTUUID" ]; then
     error_exit "Could not get PARTUUID for new root partition."
 fi
 
-# Read original cmdline.txt, replace root=, write to new drive's boot partition
+# Read original cmdline.txt, replace root=, write back.
 CMDLINE_TXT_PATH="$NEW_BOOT_MNT/cmdline.txt"
 if [ ! -f "$CMDLINE_TXT_PATH" ]; then
     error_exit "$CMDLINE_TXT_PATH not found. Copying might have failed."
@@ -280,9 +269,8 @@ sleep 2
 echo "--- Configuring fstab ---"
 NEW_BOOT_PARTUUID=$(sudo blkid -s PARTUUID -o value "${TARGET_DRIVE}1")
 NEW_HOME_PARTUUID=$(sudo blkid -s PARTUUID -o value "${TARGET_DRIVE}3")
-NEW_DATA_PARTUUID=$(sudo blkid -s PARTUUID -o value "${TARGET_DRIVE}4")
 
-if [ -z "$NEW_BOOT_PARTUUID" ] || [ -z "$NEW_HOME_PARTUUID" ] || [ -z "$NEW_DATA_PARTUUID" ]; then
+if [ -z "$NEW_BOOT_PARTUUID" ] || [ -z "$NEW_HOME_PARTUUID" ]; then
     error_exit "Could not get all PARTUUIDs for new partitions."
 fi
 
@@ -301,17 +289,14 @@ PARTUUID=$NEW_ROOT_PARTUUID /               ext4    defaults,noatime  0       1
 # /home partition
 PARTUUID=$NEW_HOME_PARTUUID /home           ext4    defaults,noatime  0       2
 
-# /data partition
-PARTUUID=$NEW_DATA_PARTUUID /mnt/data       ext4    defaults,noatime  0       2
-
 # /var as tmpfs (RAM-based, volatile for power-cut resilience)
 tmpfs /var              tmpfs   defaults,noatime,nosuid,size=${VAR_TMPFS_SIZE_MIB}M        0       0
 
 # /tmp as tmpfs (RAM-based, volatile)
 tmpfs /tmp              tmpfs   defaults,noatime,nosuid,size=64M         0       0
 
-# Swap file (will be created on /mnt/data)
-/mnt/data/swapfile none swap defaults 0 0
+# Swap file (will be created on /home)
+/home/swapfile none swap defaults 0 0
 EOF
 )
 
@@ -321,11 +306,11 @@ sleep 2
 
 # 12. Create and Configure Swap File
 echo "--- Creating and configuring swap file ---"
-# Disable dphys-swapfile on the new system if it exists (it will try to use /var/swap)
+# Disable dphys-swapfile service in the new system if it exists (it will try to use /var/swap)
 echo "Disabling dphys-swapfile service in the new OS..."
 sudo chroot "$NEW_ROOT_MNT" systemctl disable dphys-swapfile || echo "Warning: dphys-swapfile not found or could not be disabled in chroot."
 
-SWAP_FILE_PATH="$NEW_DATA_MNT/swapfile"
+SWAP_FILE_PATH="$NEW_HOME_MNT/swapfile" # Swap file now on /home partition
 echo "Creating ${SWAP_FILE_SIZE_GB}GB swap file at $SWAP_FILE_PATH..."
 sudo fallocate -l "${SWAP_FILE_SIZE_GB}G" "$SWAP_FILE_PATH" || error_exit "Failed to create swap file."
 sudo chmod 600 "$SWAP_FILE_PATH" || error_exit "Failed to set permissions on swap file."
@@ -343,7 +328,7 @@ echo "3. Power on your Raspberry Pi 4."
 echo "4. After booting, you can verify partitions with 'df -h' and swap with 'swapon --show' or 'free -h'."
 echo "5. If your Pi 4 doesn't boot, ensure its EEPROM firmware is up to date for USB boot support."
 echo "   You can update the EEPROM using the Raspberry Pi Imager's 'Misc Utility Images' option on an SD card."
-echo "6. Remember to move any personal data from your old installation to the new /home or /mnt/data partitions."
+echo "6. Remember to move any personal data from your old installation to the new /home partition."
 echo "   (Connect your old USB drive, mount its partitions, and use rsync to copy data)."
 echo ""
 echo "Script finished successfully."
