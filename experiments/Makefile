@@ -10,7 +10,7 @@
 # --- Configuration Variables ---
 # Latest Raspberry Pi OS Lite (64-bit) Bookworm image URL
 # ALWAYS VERIFY THIS URL ON THE OFFICIAL RASPBERRY PI WEBSITE FOR THE LATEST VERSION!
-IMAGE_URL := https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2025-05-13/2025-05-13-raspios-bookworm-arm64-lite.img.xz
+IMAGE_URL := https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2024-03-15/2024-03-15-raspios-bookworm-arm64-lite.img.xz
 IMAGE_XZ_FILENAME := $(notdir $(IMAGE_URL))
 IMAGE_FILENAME := $(basename $(IMAGE_XZ_FILENAME))
 
@@ -217,40 +217,46 @@ configure_os: copy_files
 	@sleep 2
 
 	@echo "--- Configuring fstab ---"
+	# Create the fstab content using a separate script to avoid Makefile heredoc indentation issues
 	@NEW_BOOT_PARTUUID=$$(sudo blkid -s PARTUUID -o value "$(TARGET_DRIVE)1")
 	@NEW_HOME_PARTUUID=$$(sudo blkid -s PARTUUID -o value "$(TARGET_DRIVE)3")
-
 	@if [ -z "$${NEW_BOOT_PARTUUID}" ] || [ -z "$${NEW_HOME_PARTUUID}" ]; then \
 		echo "ERROR: Could not get all PARTUUIDs for new partitions." >&2; \
 		exit 1; \
 	fi
-
-	@FSTAB_CONTENT=$$(cat <<EOF
-# This is /etc/fstab for the new Raspberry Pi OS installation.
-# Please keep this file in sync with the /etc/fstab file of the
-# system that mounted this file.
-# For more info, see fstab(5).
-
-# /boot partition
-PARTUUID=$${NEW_BOOT_PARTUUID} /boot           vfat    defaults,noatime  0       2
-
-# / (root) partition
-PARTUUID=$${NEW_ROOT_PARTUUID} /               ext4    defaults,noatime  0       1
-
-# /home partition
-PARTUUID=$${NEW_HOME_PARTUUID} /home           ext4    defaults,noatime  0       2
-
-# /var as tmpfs (RAM-based, volatile for power-cut resilience)
-tmpfs /var              tmpfs   defaults,noatime,nosuid,size=$$(VAR_TMPFS_SIZE_MIB)M        0       0
-
-# /tmp as tmpfs (RAM-based, volatile)
-tmpfs /tmp              tmpfs   defaults,noatime,nosuid,size=64M         0       0
-
-# Swap file (will be created on /home)
-/home/swapfile none swap defaults 0 0
-EOF
-)
-	@echo "$${FSTAB_CONTENT}" | sudo tee "$(NEW_ROOT_MNT)/etc/fstab" > /dev/null || { echo "ERROR: Failed to write fstab." >&2; exit 1; }
+	@echo "Generating write_fstab.sh script..."
+	@echo "#!/bin/bash" > write_fstab.sh
+	@echo "NEW_BOOT_PARTUUID=\"$${NEW_BOOT_PARTUUID}\"" >> write_fstab.sh
+	@echo "NEW_ROOT_PARTUUID=\"$${NEW_ROOT_PARTUUID}\"" >> write_fstab.sh
+	@echo "NEW_HOME_PARTUUID=\"$${NEW_HOME_PARTUUID}\"" >> write_fstab.sh
+	@echo "VAR_TMPFS_SIZE_MIB=\"$$(VAR_TMPFS_SIZE_MIB)\"" >> write_fstab.sh
+	@echo "cat <<EOF > \"$1\"" >> write_fstab.sh
+	@echo "# This is /etc/fstab for the new Raspberry Pi OS installation." >> write_fstab.sh
+	@echo "# Please keep this file in sync with the /etc/fstab file of the" >> write_fstab.sh
+	@echo "# system that mounted this file." >> write_fstab.sh
+	@echo "# For more info, see fstab(5)." >> write_fstab.sh
+	@echo "" >> write_fstab.sh
+	@echo "# /boot partition" >> write_fstab.sh
+	@echo "PARTUUID=$${NEW_BOOT_PARTUUID} /boot           vfat    defaults,noatime  0       2" >> write_fstab.sh
+	@echo "" >> write_fstab.sh
+	@echo "# / (root) partition" >> write_fstab.sh
+	@echo "PARTUUID=$${NEW_ROOT_PARTUUID} /               ext4    defaults,noatime  0       1" >> write_fstab.sh
+	@echo "" >> write_fstab.sh
+	@echo "# /home partition" >> write_fstab.sh
+	@echo "PARTUUID=$${NEW_HOME_PARTUUID} /home           ext4    defaults,noatime  0       2" >> write_fstab.sh
+	@echo "" >> write_fstab.sh
+	@echo "# /var as tmpfs (RAM-based, volatile for power-cut resilience)" >> write_fstab.sh
+	@echo "tmpfs /var              tmpfs   defaults,noatime,nosuid,size=$${VAR_TMPFS_SIZE_MIB}M        0       0" >> write_fstab.sh
+	@echo "" >> write_fstab.sh
+	@echo "# /tmp as tmpfs (RAM-based, volatile)" >> write_fstab.sh
+	@echo "tmpfs /tmp              tmpfs   defaults,noatime,nosuid,size=64M         0       0" >> write_fstab.sh
+	@echo "" >> write_fstab.sh
+	@echo "# Swap file (will be created on /home)" >> write_fstab.sh
+	@echo "/home/swapfile none swap defaults 0 0" >> write_fstab.sh
+	@echo "EOF" >> write_fstab.sh
+	@chmod +x write_fstab.sh
+	@sudo ./write_fstab.sh "$(NEW_ROOT_MNT)/etc/fstab" || { echo "ERROR: Failed to write fstab using wrapper script." >&2; exit 1; }
+	@rm write_fstab.sh # Clean up the temporary script
 	@echo "fstab configured."
 	@sleep 2
 	@echo "--- Finished: Configure OS ---"
