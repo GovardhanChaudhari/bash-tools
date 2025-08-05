@@ -24,7 +24,7 @@ While checking out dev branch, use -- at the end of git command to differentiate
 **gsctl** base command | **ggss** status | **gsl** list | **gsls** list services | **gslrs** list running services | **gsstps** stop service | **gssrts** start service | **gsds** disable service | **gses** enable service
 
 ## system
-**gpoff** power off | **grbt** reboot
+**gpoff** power off | **grbt** reboot | **ghib** hibernate
 
 ## docker
 **gdckr** base command | **gdckri** list images | **gdckrrit** run interactive | **gdckrps** ps | **gdckrstp** stop 
