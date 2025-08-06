@@ -10,3 +10,7 @@ gbtr(){
 gbtd(){
     cd $GVC_BASH_TOOLS_HOME
 }
+
+gbt-scr(){
+    source $GVC_BASH_TOOLS_HOME/index.sh
+}
