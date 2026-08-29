@@ -42,9 +42,7 @@ While checking out dev branch, use -- at the end of git command to differentiate
 **gnmp** nmap base cmd | **gnmpos** scan for OS
 
 ## tmux
-**gtmx** tmux base command | **gtma** attach to session
-
-Note: Tmux resurrect plugin's imp env file is backedup in ./tmux/plugins/resurrect dir. Copy this file to ~/.tmux/resurrect dir create a symlink called 'last' to the same dir.
+**gtmx** tmux base command | **gtma** attach to session | **Prefix + r** reload tmux config
 
 ## rpi4
 **rpimt** show rpi temperature | **wrpimt** watch rpi temperature
