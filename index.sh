@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $HOME/bash-tools/env/env_vars.sh
+source $HOME/dev/bash-tools/env/env_vars.sh
 
 parent_dir="$GVC_BASH_TOOLS_HOME"
 
