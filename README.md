@@ -2,6 +2,9 @@
 Note:
 While checking out dev branch, use -- at the end of git command to differentiate between path and string as project directory contains dev directory.
 
+Note:
+While checking out dev branch, use -- at the end of git command to differentiate between path and string as project directory contains dev directory.
+
 ## Help
 **gh** show help of given command | **ghl** show help in less
 
