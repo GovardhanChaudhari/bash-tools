@@ -1,0 +1,36 @@
+pane	dev-bt	0	0	:	0	raspberrypi	:/home/gvc/dev/bash-tools/bash	1	less	:less /home/gvc/dev/bash-tools/README.md
+pane	dev-bt	1	0	:-	0	raspberrypi	:/home/gvc/dev/bash-tools	1	vim	:rbash
+pane	dev-bt	2	0	:	0	raspberrypi	:/home/gvc/dev/bash-tools/bash	0	vim	:vim bash-utils.sh
+pane	dev-bt	2	0	:	1	raspberrypi	:/home/gvc/dev/bash-tools	1	vim	:vim bash/bash-functions.sh
+pane	dev-bt	3	0	:	0	raspberrypi	:/home/gvc/dev/bash-tools	1	vim	:vim file/gvc-file-utils.sh
+pane	dev-bt	4	1	:*	0	raspberrypi	:/home/gvc/dev/bash-tools	1	less	:less /home/gvc/.tmux.conf
+pane	pc	0	1	:*	0	raspberrypi	:/home/gvc	0	htop	:htop
+pane	pc	0	1	:*	1	raspberrypi	:/home/gvc	0	zsh	:
+pane	pc	0	1	:*	2	raspberrypi	:/home/gvc	0	zsh	:
+pane	pc	0	1	:*	3	raspberrypi	:/home/gvc	1	zsh	:
+pane	pc	0	1	:*	4	raspberrypi	:/home/gvc/dev/docker-experiments	0	zsh	:
+pane	tab-dev	0	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	vim	:vim Dockerfile
+pane	tab-dev	1	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	vim	:vim docker-compose.yml
+pane	tab-dev	2	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	zsh	:
+pane	tab-dev	3	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	zsh	:
+pane	tab-dev	4	1	:*	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	zsh	:
+pane	tab-dev	5	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	vim	:vim nginx.conf
+pane	tab-dev	6	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	zsh	:
+pane	tab-dev	7	0	:-	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	zsh	:
+pane	tab-dev	8	0	:	0	raspberrypi	:/home/gvc/dev/docker-experiments	1	vim	:vim set-proxy.sh
+window	dev-bt	0	:bth	0	:	64a4,66x29,0,0,15	off
+window	dev-bt	1	:edit	0	:-	64a5,66x29,0,0,16	off
+window	dev-bt	2	:btr	0	:	7430,66x29,0,0[66x14,0,0,17,66x14,0,15,19]	off
+window	dev-bt	3	:edit index	0	:	64a7,66x29,0,0,18	off
+window	dev-bt	4	:less	1	:*	e49f,66x29,0,0,20	:
+window	pc	0	:zsh	1	:*	aed9,66x29,0,0[66x20,0,0{32x20,0,0,1,33x20,33,0,2},66x4,0,21{32x4,0,21,3,33x4,33,21,4},66x3,0,26,5]	:
+window	tab-dev	0	:edit-df	0	:	c8e3,66x29,0,0,6	off
+window	tab-dev	1	:edit-dc-yml	0	:	c8e4,66x29,0,0,7	off
+window	tab-dev	2	:dckr-comp	0	:	c8e5,66x29,0,0,8	off
+window	tab-dev	3	:cmd dc-exe	0	:	c8e6,66x29,0,0,9	off
+window	tab-dev	4	:curl	1	:*	649f,66x29,0,0,10	off
+window	tab-dev	5	:edit-conf	0	:	64a0,66x29,0,0,11	off
+window	tab-dev	6	:git	0	:	64a1,66x29,0,0,12	off
+window	tab-dev	7	:set-prixy	0	:-	64a2,66x29,0,0,13	off
+window	tab-dev	8	:edit-prox	0	:	64a3,66x29,0,0,14	off
+state	dev-bt	tab-dev

@@ -1,0 +1,15 @@
+version: '3.3'
+services:
+  test:
+    #    image: sshtest
+    build:
+      context: .
+    secrets:
+      - user_ssh_key
+    networks:
+      - alpine-net
+secrets:
+  user_ssh_key:
+    file: ~/.ssh/id_rsa
+networks:
+  alpine-net:

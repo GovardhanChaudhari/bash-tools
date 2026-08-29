@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+  test-bash-tools:
+    build:
+      context: .
+    volumes:
+      - type: bind
+        source: .
+        target: /home/bash-tools

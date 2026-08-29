@@ -16,11 +16,11 @@ getCurrentFullFilePath(){
     echo $fullPath
 }
 
-md(){
+gmd(){
   mkdir $@
 }
 
-rd(){
+grd(){
   rm -fr "$1"
 }
 
@@ -40,3 +40,8 @@ get_relative_path(){
   echo "$(dirname $(realpath $0))"
 }
 
+# edit shortcut
+e(){ vim $@ }
+
+# show file
+glf(){ less $@ }

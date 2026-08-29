@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Commit changes
-gc(){
-  git commit -m "$1"
+ggc() {
+  git commit -m "$@"
 }
 
 # Commit and push
-gcp(){
-    gc $* && gp
+ggcp(){
+    ggc $* && gp
 }
 
 # Add current changes
@@ -16,7 +16,7 @@ git_add(){
 }
 
 # git_add function alias
-gga(){
+gad(){
    git_add "$@"
 }
 
@@ -32,7 +32,7 @@ gacp(){
   gp
 }
 
-gco(){
+ggco(){
   git checkout "$1"
 }
 
@@ -51,7 +51,7 @@ git_merge(){
 }
 
 # Alias for git_merge function
-gm(){
+ggm(){
   git_merge "$@"
 }
 
@@ -81,7 +81,7 @@ gmtm(){
 }
 
 #Create git branch 
-gb(){
+ggb(){
   git branch "$1"
 }
 
@@ -92,7 +92,7 @@ gbsu(){
 
 
 # List git branches
-gbl(){
+ggbl(){
   git branch "$@"
 }
 
@@ -102,7 +102,7 @@ get_current_branch_name(){
 }
 
 # Restore file to its original state
-grst(){
+ggrst(){
   git restore "$1"
 }
 
@@ -118,4 +118,10 @@ gdb(){
 # Clone
 ggcl(){
   git clone $1
+}
+
+# Avoid asking for passphrase every time during git operations
+gsshadd(){
+  eval "$(ssh-agent -s)"
+  ssh-add ~/.ssh/id_ed25519 2>/dev/null
 }
