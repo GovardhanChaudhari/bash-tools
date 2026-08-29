@@ -1,2 +1,2 @@
 # edit zshrc
-gezrc(){ e ~/.zshrc }
+gezrc(){ e ~/.zshrc; }

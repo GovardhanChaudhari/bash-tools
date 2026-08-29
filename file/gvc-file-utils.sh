@@ -16,32 +16,22 @@ getCurrentFullFilePath(){
     echo $fullPath
 }
 
-gmd(){
-  mkdir $@
-}
+gmd(){ mkdir $@; }
 
-grd(){
-  rm -fr "$1"
-}
+grd(){ rm -fr "$1"; }
 
 # Create bash file
-gcbf(){
-  echo "#!/bin/bash" > "$1"
-}
+gcbf(){ echo "#!/bin/bash" > "$1"; }
 
 # Create new bash file and make it executable
-cx(){
-  gcbf "$1" && x "$1"
-}
+cx(){ gcbf "$1" && x "$1"; }
 
 # Note: This will give relative path from this file
 #(WIP, not working yet)
-get_relative_path(){
-  echo "$(dirname $(realpath $0))"
-}
+get_relative_path(){ echo "$(dirname $(realpath $0))"; }
 
 # edit shortcut
-e(){ vim $@ }
+e(){ vim $@; }
 
 # show file
-glf(){ less $@ }
+glf(){ less $@; }

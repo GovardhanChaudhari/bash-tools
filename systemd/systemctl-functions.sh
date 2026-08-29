@@ -1,41 +1,25 @@
-gsctl(){ sudo systemctl $@ }
+gsctl(){ sudo systemctl $@; }
 
 # List
-gsl(){
-  gsctl $@
-}
+gsl(){ gsctl $@; }
 
 # List services
-gsls(){
-  gsl -t service $@
-}
+gsls(){ gsl -t service $@; }
 
 # List running services
-gslrs(){
-  gsls --state=running $@
-}
+gslrs(){ gsls --state=running $@; }
 
 # Status
-ggss(){
-  gsctl status $@
-}
+ggss(){ gsctl status $@; }
 
 # stop
-gsstps(){
-	gsctl stop $@
-}
+gsstps(){ gsctl stop $@; }
 
 # start service
-gssrts(){
-	gsctl start $@
-}
+gssrts(){ gsctl start $@; }
 
 # disable service
-gsds(){
-	gsctl disable $@
-}
+gsds(){ gsctl disable $@; }
 
 # enable service
-gses(){
-	gsctl enable $@
-}
+gses(){ gsctl enable $@; }

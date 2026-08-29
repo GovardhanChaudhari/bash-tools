@@ -1,5 +1,5 @@
 # tmux base func
-gtmx(){ tmux $@ }
+gtmx(){ tmux $@; }
 
 # attach to session
-gtma(){ gtmx a -t $@ }
+gtma(){ gtmx a -t $@; }

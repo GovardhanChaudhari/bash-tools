@@ -1,2 +1,2 @@
 # find contents in dir
-gfndc(){ grep -r $@ }
+gfndc(){ grep -r $@; }

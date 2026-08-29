@@ -1,29 +1,29 @@
 # base command
-aptcmd(){ sudo apt $@ }
+aptcmd(){ sudo apt $@; }
 
 # install
-gi(){ aptcmd install $@ }
+gi(){ aptcmd install $@; }
 
 # update
-gu(){ aptcmd update $@ }
+gu(){ aptcmd update $@; }
 
 # upgrade 
-ggup(){ aptcmd upgrade $@ }
+ggup(){ aptcmd upgrade $@; }
 
 # full upgrade
-gfup(){ aptcmd fullupgrade $@ }
+gfup(){ aptcmd fullupgrade $@; }
 
 # list upgradable
-glu(){ aptcmd list --upgradable }
+glu(){ aptcmd list --upgradable; }
 
 # list installed
-gli(){ aptcmd list --installed }
+gli(){ aptcmd list --installed; }
 
 # autoremove
-gatr(){ aptcmd autoremove $@ }
+gatr(){ aptcmd autoremove $@; }
 
 # remove
-gar(){ aptcmd remove }
+gar(){ aptcmd remove; }
 
 # show 
-gas(){ aptcmd show $@ }
+gas(){ aptcmd show $@; }

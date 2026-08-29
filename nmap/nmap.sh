@@ -1,7 +1,7 @@
 # nmap base command
-gnmp(){ sudo nmap $@ }
+gnmp(){ sudo nmap $@; }
 
 # scan for os
-gnmpos(){ gnmp -O $@ }
+gnmpos(){ gnmp -O $@; }
 
 

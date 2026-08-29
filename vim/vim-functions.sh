@@ -1,2 +1,2 @@
 # edit vimrc
-gevrc(){ e ~/.vimrc }
+gevrc(){ e ~/.vimrc; }

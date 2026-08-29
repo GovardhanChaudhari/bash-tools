@@ -1,8 +1,8 @@
 # power off
-gpoff(){ sudo poweroff $@ }
+gpoff(){ sudo poweroff $@; }
 
 # reboot
-grbt(){ sudo reboot $@ $@ }
+grbt(){ sudo reboot $@ $@; }
 
 # Hibernate
-ghib(){ sudo systemctl hibernate $@ }
+ghib(){ sudo systemctl hibernate $@; }

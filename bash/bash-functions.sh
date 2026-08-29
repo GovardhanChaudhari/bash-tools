@@ -1,10 +1,10 @@
-#!/bin/bas
+#!/bin/bash
 
 # edit bashrc
-gebrc(){ e ~/.bashrc }
+gebrc(){ e ~/.bashrc; }
 
-gcls(){ clear }
+gcls(){ clear; }
 
-gcdp(){ cd .. }
+gcdp(){ cd ..; }
 
-glc(){ $@ | less }
+glc(){ $@ | less; }

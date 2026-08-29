@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-rpimt(){ sudo vcgencmd measure_temp };
+rpimt(){ sudo vcgencmd measure_temp; };
 
 wrpimt(){
 	while true; do
